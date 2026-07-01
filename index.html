@@ -1,0 +1,1320 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>公共サービス災害対応ポータル</title>
+  <style>
+    :root {
+      --bg: #f6f7f4;
+      --panel: #ffffff;
+      --ink: #1f2933;
+      --muted: #667085;
+      --line: #d7ddd5;
+      --accent: #256f63;
+      --accent-2: #bd5d38;
+      --warn: #b45309;
+      --danger: #b42318;
+      --ok: #24794f;
+      --soft: #e9f2ef;
+      --soft-2: #f4e8df;
+      --shadow: 0 10px 30px rgba(31, 41, 51, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Yu Gothic", "Meiryo", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.55;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 248px minmax(0, 1fr);
+    }
+
+    .sidebar {
+      background: #172b2a;
+      color: #f8faf8;
+      padding: 24px 18px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: auto;
+    }
+
+    .brand {
+      margin-bottom: 26px;
+    }
+
+    .brand strong {
+      display: block;
+      font-size: 19px;
+      letter-spacing: 0;
+    }
+
+    .brand span {
+      display: block;
+      color: #b8c7c4;
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    .nav {
+      display: grid;
+      gap: 8px;
+    }
+
+    .nav button {
+      width: 100%;
+      text-align: left;
+      background: transparent;
+      color: #dbe7e4;
+      border-radius: 8px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav button.active,
+    .nav button:hover {
+      background: #25423f;
+      color: #ffffff;
+    }
+
+    .nav .icon {
+      width: 20px;
+      text-align: center;
+      flex: 0 0 auto;
+    }
+
+    .main {
+      min-width: 0;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding: 22px 28px;
+      background: rgba(246, 247, 244, 0.9);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      border-bottom: 1px solid var(--line);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 24px;
+      line-height: 1.25;
+    }
+
+    .topbar p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .btn {
+      min-height: 40px;
+      border-radius: 8px;
+      padding: 9px 14px;
+      background: var(--accent);
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+      box-shadow: 0 2px 0 rgba(0, 0, 0, 0.08);
+    }
+
+    .btn.secondary {
+      background: #ffffff;
+      color: var(--ink);
+      border: 1px solid var(--line);
+      box-shadow: none;
+    }
+
+    .btn.warn {
+      background: var(--accent-2);
+    }
+
+    .content {
+      padding: 24px 28px 42px;
+      display: grid;
+      gap: 22px;
+    }
+
+    .section {
+      display: none;
+    }
+
+    .section.active {
+      display: grid;
+      gap: 22px;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .metric {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      box-shadow: var(--shadow);
+    }
+
+    .metric span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .metric strong {
+      display: block;
+      margin-top: 8px;
+      font-size: 28px;
+      line-height: 1;
+    }
+
+    .metric small {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+      gap: 18px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .panel-head {
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .panel-head h2 {
+      margin: 0;
+      font-size: 17px;
+    }
+
+    .panel-head p {
+      margin: 4px 0 0;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .panel-body {
+      padding: 16px 18px 18px;
+    }
+
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 820px;
+    }
+
+    th,
+    td {
+      padding: 11px 10px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+      font-size: 13px;
+    }
+
+    th {
+      background: #f0f3ef;
+      color: #39434d;
+      font-size: 12px;
+      position: sticky;
+      top: 0;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 3px 9px;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+      background: var(--soft);
+      color: var(--accent);
+    }
+
+    .tag.warn {
+      background: #fff4df;
+      color: var(--warn);
+    }
+
+    .tag.danger {
+      background: #fff0ee;
+      color: var(--danger);
+    }
+
+    .tag.ok {
+      background: #eaf6ee;
+      color: var(--ok);
+    }
+
+    .list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .list-item {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      background: #fff;
+    }
+
+    .list-item strong {
+      display: block;
+      font-size: 14px;
+    }
+
+    .list-item span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-size: 12px;
+      font-weight: 700;
+      color: #41505c;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px 11px;
+      background: #fff;
+      color: var(--ink);
+      min-height: 40px;
+    }
+
+    textarea {
+      min-height: 94px;
+      resize: vertical;
+    }
+
+    .report-box {
+      background: #fbfcfa;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      white-space: pre-wrap;
+      font-family: "Yu Gothic", "Meiryo", sans-serif;
+      min-height: 280px;
+      overflow: auto;
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .filters {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .filters select,
+    .filters input {
+      width: auto;
+      min-width: 160px;
+    }
+
+    .notice {
+      border-left: 4px solid var(--accent-2);
+      background: var(--soft-2);
+      padding: 12px 14px;
+      border-radius: 8px;
+      color: #57311f;
+      font-size: 13px;
+    }
+
+    .flow-stage {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(140px, 1fr));
+      gap: 12px;
+      align-items: stretch;
+    }
+
+    .flow-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+      padding: 14px;
+      position: relative;
+      min-height: 132px;
+    }
+
+    .flow-card:not(:last-child)::after {
+      content: "→";
+      position: absolute;
+      right: -16px;
+      top: 48px;
+      color: var(--accent);
+      font-weight: 800;
+      font-size: 22px;
+      z-index: 1;
+    }
+
+    .flow-card b {
+      display: block;
+      font-size: 13px;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    .flow-card strong {
+      display: block;
+      font-size: 15px;
+      margin-bottom: 8px;
+    }
+
+    .flow-card span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .swimlane {
+      display: grid;
+      gap: 10px;
+    }
+
+    .lane {
+      display: grid;
+      grid-template-columns: 150px repeat(4, minmax(0, 1fr));
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .lane-title {
+      background: #edf3f1;
+      font-weight: 800;
+      padding: 14px;
+      display: flex;
+      align-items: center;
+    }
+
+    .lane-cell {
+      min-height: 74px;
+      padding: 12px;
+      border-left: 1px solid var(--line);
+      display: grid;
+      align-content: center;
+      gap: 4px;
+      font-size: 13px;
+    }
+
+    .lane-cell small {
+      color: var(--muted);
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .product-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      padding: 16px;
+      min-height: 180px;
+    }
+
+    .product-card h3 {
+      margin: 0 0 8px;
+      font-size: 16px;
+    }
+
+    .product-card p {
+      color: var(--muted);
+      margin: 0;
+      font-size: 13px;
+    }
+
+    .product-card ul {
+      margin: 12px 0 0;
+      padding-left: 18px;
+      color: #344054;
+      font-size: 13px;
+    }
+
+    .mobile-menu {
+      display: none;
+    }
+
+    @media (max-width: 940px) {
+      .app {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: fixed;
+        inset: 0 auto 0 0;
+        width: min(82vw, 300px);
+        transform: translateX(-105%);
+        transition: transform 160ms ease;
+        z-index: 10;
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .mobile-menu {
+        display: inline-flex;
+      }
+
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .metrics,
+      .grid-2,
+      .form-grid,
+      .flow-stage,
+      .product-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .flow-card:not(:last-child)::after {
+        content: "↓";
+        right: 18px;
+        top: auto;
+        bottom: -22px;
+      }
+
+      .lane {
+        grid-template-columns: 1fr;
+      }
+
+      .lane-cell {
+        border-left: 0;
+        border-top: 1px solid var(--line);
+      }
+
+      .content {
+        padding: 18px 16px 32px;
+      }
+    }
+
+    @media print {
+      .sidebar,
+      .topbar,
+      .no-print {
+        display: none !important;
+      }
+
+      .app {
+        display: block;
+      }
+
+      body {
+        background: #fff;
+      }
+
+      .content {
+        padding: 0;
+      }
+
+      .section {
+        display: none !important;
+      }
+
+      #reports {
+        display: grid !important;
+      }
+
+      .panel {
+        box-shadow: none;
+        border: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <strong>災害対応ポータル</strong>
+        <span>現場・法人・自治体 共有版</span>
+      </div>
+      <nav class="nav" aria-label="画面切替">
+        <button class="active" data-section="dashboard"><span class="icon">⌂</span>ダッシュボード</button>
+        <button data-section="workflow"><span class="icon">⇄</span>対応フロー</button>
+        <button data-section="product"><span class="icon">◇</span>販売設計</button>
+        <button data-section="policies"><span class="icon">□</span>区・施設方針</button>
+        <button data-section="resources"><span class="icon">▦</span>備品・人員</button>
+        <button data-section="submit"><span class="icon">＋</span>現場報告入力</button>
+        <button data-section="reports"><span class="icon">↧</span>事後報告出力</button>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <button class="btn secondary mobile-menu" id="menuBtn" type="button">☰ メニュー</button>
+          <h1 id="pageTitle">ダッシュボード</h1>
+          <p>台風・大雨・地震などの対応状況を、同じ情報源から確認・報告・出力できます。施設初期データ：奉優会 施設一覧</p>
+        </div>
+        <div class="actions no-print">
+          <button class="btn secondary" id="csvBtn" type="button">CSV出力</button>
+          <button class="btn warn" id="printBtn" type="button">自治体報告を印刷</button>
+        </div>
+      </header>
+
+      <div class="content">
+        <section class="section active" id="dashboard">
+          <div class="metrics">
+            <div class="metric">
+              <span>対象施設</span>
+              <strong id="facilityCount">0</strong>
+              <small>区別・施設別に集約</small>
+            </div>
+            <div class="metric">
+              <span>要確認</span>
+              <strong id="attentionCount">0</strong>
+              <small>不足・未確定を含む</small>
+            </div>
+            <div class="metric">
+              <span>本日の報告</span>
+              <strong id="reportCount">0</strong>
+              <small>フォーム入力分</small>
+            </div>
+            <div class="metric">
+              <span>不足備品</span>
+              <strong id="shortageCount">0</strong>
+              <small>施設横断で確認</small>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="panel">
+              <div class="panel-head">
+                <div>
+                  <h2>運営状況一覧</h2>
+                  <p>区の方針と施設の判断を同じ表で確認します。</p>
+                </div>
+              </div>
+              <div class="panel-body">
+                <div class="table-wrap">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>区</th>
+                        <th>施設</th>
+                        <th>災害種別</th>
+                        <th>運営判断</th>
+                        <th>人員</th>
+                        <th>確認事項</th>
+                      </tr>
+                    </thead>
+                    <tbody id="statusRows"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-head">
+                <div>
+                  <h2>優先対応</h2>
+                  <p>法人・現場で早めに確認する事項です。</p>
+                </div>
+              </div>
+              <div class="panel-body">
+                <div class="list" id="priorityList"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="workflow">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h2>災害対応フロー</h2>
+                <p>LINE WORKS上の報告を、ポータルで受付・集約・判断・出力する流れに整理します。</p>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div class="flow-stage">
+                <div class="flow-card">
+                  <b>STEP 1</b>
+                  <strong>施設長が報告</strong>
+                  <span>開館状況、利用者状況、職員配置、被害、不足物品をフォーム入力します。</span>
+                </div>
+                <div class="flow-card">
+                  <b>STEP 2</b>
+                  <strong>エリアで一次集約</strong>
+                  <span>未報告施設、緊急度、支援要請を一覧で確認します。</span>
+                </div>
+                <div class="flow-card">
+                  <b>STEP 3</b>
+                  <strong>法人本部が判断</strong>
+                  <span>区の方針、法人方針、施設状況を照合し、運営判断を確定します。</span>
+                </div>
+                <div class="flow-card">
+                  <b>STEP 4</b>
+                  <strong>関係者へ共有</strong>
+                  <span>LINE WORKS、メール、Googleサイトで同じ情報を共有します。</span>
+                </div>
+                <div class="flow-card">
+                  <b>STEP 5</b>
+                  <strong>報告書を出力</strong>
+                  <span>自治体・法人向けの事後報告をPDF、CSV、スプレッドシートで出力します。</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h2>役割別の動き</h2>
+                <p>誰がどのタイミングで何を見るかを、販売先にも説明しやすい形にしています。</p>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div class="swimlane">
+                <div class="lane">
+                  <div class="lane-title">施設長</div>
+                  <div class="lane-cell"><strong>現場確認</strong><small>建物、職員、利用者、備品</small></div>
+                  <div class="lane-cell"><strong>フォーム入力</strong><small>写真・支援要請も添付</small></div>
+                  <div class="lane-cell"><strong>追加指示確認</strong><small>法人・区の判断を確認</small></div>
+                  <div class="lane-cell"><strong>完了報告</strong><small>復旧・事後対応を記録</small></div>
+                </div>
+                <div class="lane">
+                  <div class="lane-title">法人本部</div>
+                  <div class="lane-cell"><strong>未報告確認</strong><small>施設別の入力状況</small></div>
+                  <div class="lane-cell"><strong>リスク判定</strong><small>高緊急度・不足物品</small></div>
+                  <div class="lane-cell"><strong>運営判断</strong><small>休館、短縮、通常運営</small></div>
+                  <div class="lane-cell"><strong>一括出力</strong><small>自治体・役員向け報告</small></div>
+                </div>
+                <div class="lane">
+                  <div class="lane-title">自治体</div>
+                  <div class="lane-cell"><strong>必要情報受領</strong><small>報告書または閲覧専用</small></div>
+                  <div class="lane-cell"><strong>施設状況把握</strong><small>被害・支援要請</small></div>
+                  <div class="lane-cell"><strong>追加連絡</strong><small>方針・依頼事項</small></div>
+                  <div class="lane-cell"><strong>事後確認</strong><small>対応履歴の確認</small></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="product">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h2>販売前提のプロダクト設計</h2>
+                <p>公共サービス・福祉施設向けの災害対応SaaSとして説明できる構成です。</p>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div class="product-grid">
+                <div class="product-card">
+                  <h3>現場入力モジュール</h3>
+                  <p>施設長がスマホから短時間で状況報告できます。</p>
+                  <ul>
+                    <li>災害時報告フォーム</li>
+                    <li>備品・人員更新</li>
+                    <li>写真・支援要請</li>
+                  </ul>
+                </div>
+                <div class="product-card">
+                  <h3>法人管理モジュール</h3>
+                  <p>複数施設の状況を一元管理し、未報告や不足を見逃しません。</p>
+                  <ul>
+                    <li>全施設ダッシュボード</li>
+                    <li>未報告アラート</li>
+                    <li>運営判断の履歴化</li>
+                  </ul>
+                </div>
+                <div class="product-card">
+                  <h3>自治体報告モジュール</h3>
+                  <p>同じデータから、自治体・法人向けの報告書を出力します。</p>
+                  <ul>
+                    <li>PDF/CSV出力</li>
+                    <li>事後報告テンプレート</li>
+                    <li>提出履歴の保存</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h2>商品化する場合の提供範囲</h2>
+                <p>初期導入、月額運用、拡張開発を分けると販売しやすくなります。</p>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>プラン</th>
+                      <th>対象</th>
+                      <th>提供内容</th>
+                      <th>販売時の訴求</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><span class="tag ok">Starter</span></td>
+                      <td>単一法人・少数施設</td>
+                      <td>Googleサイト、フォーム、スプレッドシート、基本ダッシュボード</td>
+                      <td>まず災害報告の型を作り、LINE依存を減らす</td>
+                    </tr>
+                    <tr>
+                      <td><span class="tag warn">Standard</span></td>
+                      <td>複数区・複数施設</td>
+                      <td>権限管理、未報告管理、自治体報告、備品・人員台帳</td>
+                      <td>法人本部が全施設を同じ情報で判断できる</td>
+                    </tr>
+                    <tr>
+                      <td><span class="tag danger">Enterprise</span></td>
+                      <td>広域法人・自治体連携</td>
+                      <td>SSO、監査ログ、API連携、個別帳票、自治体別出力</td>
+                      <td>災害時の説明責任と記録を標準化する</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="policies">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h2>区・施設方針マスタ</h2>
+                <p>自治体の基本方針、法人判断、施設の運営方針を並べて管理します。</p>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div class="toolbar no-print">
+                <div class="filters">
+                  <select id="wardFilter" aria-label="区で絞り込み">
+                    <option value="">すべての区</option>
+                  </select>
+                  <input id="policySearch" type="search" placeholder="施設・方針を検索">
+                </div>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>区</th>
+                      <th>施設名</th>
+                      <th>区の基本方針</th>
+                      <th>法人側の判断</th>
+                      <th>施設運営方針</th>
+                      <th>最終更新</th>
+                    </tr>
+                  </thead>
+                  <tbody id="policyRows"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="resources">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h2>備品・人員一覧</h2>
+                <p>各館で持っている物品と不足を一元化します。</p>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>施設</th>
+                      <th>必要人員</th>
+                      <th>配置可能</th>
+                      <th>土嚢</th>
+                      <th>雨合羽</th>
+                      <th>ヘルメット</th>
+                      <th>手袋</th>
+                      <th>不足・要手配</th>
+                    </tr>
+                  </thead>
+                  <tbody id="resourceRows"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="submit">
+          <div class="grid-2">
+            <div class="panel">
+              <div class="panel-head">
+                <div>
+                  <h2>現場報告入力</h2>
+                  <p>LINEで流れがちな情報を、必要項目つきで記録します。</p>
+                </div>
+              </div>
+              <div class="panel-body">
+                <form id="reportForm" class="form-grid">
+                  <div class="field">
+                    <label for="facility">施設</label>
+                    <select id="facility" required></select>
+                  </div>
+                  <div class="field">
+                    <label for="reporter">報告者</label>
+                    <input id="reporter" required placeholder="例：山田">
+                  </div>
+                  <div class="field">
+                    <label for="eventType">災害種別</label>
+                    <select id="eventType">
+                      <option>台風</option>
+                      <option>大雨</option>
+                      <option>地震</option>
+                      <option>大雪</option>
+                      <option>その他</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label for="operation">運営状況</label>
+                    <select id="operation">
+                      <option>通常開館</option>
+                      <option>条件付き開館</option>
+                      <option>一部休止</option>
+                      <option>休館予定</option>
+                      <option>判断待ち</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label for="users">利用者状況</label>
+                    <input id="users" placeholder="例：利用者8名、帰宅調整中">
+                  </div>
+                  <div class="field">
+                    <label for="staff">職員配置</label>
+                    <input id="staff" placeholder="例：常勤2、非常勤1">
+                  </div>
+                  <div class="field">
+                    <label for="damage">建物・周辺状況</label>
+                    <input id="damage" placeholder="例：浸水なし、入口に強風">
+                  </div>
+                  <div class="field">
+                    <label for="urgency">緊急度</label>
+                    <select id="urgency">
+                      <option>低</option>
+                      <option>中</option>
+                      <option>高</option>
+                    </select>
+                  </div>
+                  <div class="field full">
+                    <label for="needs">支援要請・不足物品・連絡事項</label>
+                    <textarea id="needs" placeholder="例：土嚢を5袋追加希望。送迎判断は区通知待ち。"></textarea>
+                  </div>
+                  <div class="field full">
+                    <button class="btn" type="submit">報告を登録</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-head">
+                <div>
+                  <h2>登録済み報告</h2>
+                  <p>最新の報告から表示します。</p>
+                </div>
+              </div>
+              <div class="panel-body">
+                <div class="notice">この試作品ではブラウザ内に保存します。実運用ではGoogleフォーム、Microsoft Forms、kintone、Power Appsなどに接続できます。</div>
+                <div class="list" id="recentReports" style="margin-top: 14px;"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="reports">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h2>自治体・法人向け事後報告</h2>
+                <p>同じ入力データから、共有用の文面を作成します。</p>
+              </div>
+              <div class="actions no-print">
+                <button class="btn secondary" id="copyReportBtn" type="button">文面コピー</button>
+                <button class="btn secondary" id="refreshReportBtn" type="button">再生成</button>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div id="reportOutput" class="report-box"></div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const sourceUpdated = "2026/06/30";
+    const centerMaster = [
+      ["世田谷区", "世田谷区立ひだまり友遊会館"],
+      ["港区", "港区立神応いきいきプラザ"],
+      ["港区", "港区立高輪いきいきプラザ"],
+      ["港区", "港区立豊岡いきいきプラザ"],
+      ["港区", "港区立白金いきいきプラザ"],
+      ["港区", "港区立白金台いきいきプラザ"],
+      ["杉並区", "杉並区立ゆうゆう高円寺北館"],
+      ["目黒区", "目黒区高齢者センター"],
+      ["荒川区", "荒川区荒川老人福祉センター"],
+      ["新宿区", "新宿区立戸山シニア活動館"],
+      ["新宿区", "北新宿第二地域交流館"],
+      ["新宿区", "西新宿シニア活動館"],
+      ["中野区", "中野三丁目敬老館"],
+      ["江東区", "江東区亀戸福祉会館"],
+      ["江東区", "亀戸ふれあいセンター（亀戸老人福祉センター）"],
+      ["江東区", "城東ふれあいセンター（城東老人福祉センター）"],
+      ["練馬区", "練馬区立はつらつセンター豊玉"],
+      ["墨田区", "墨田区いきいきプラザ"],
+      ["墨田区", "墨田区高齢者福祉センター立花ゆうゆう館"],
+      ["北区", "北区ぷらっとほーむ滝野川東（介護予防拠点施設）"],
+      ["北区", "名主の滝老人いこいの家"],
+      ["北区", "滝野川老人いこいの家"],
+      ["品川区", "品川区立北品川高齢者多世代交流支援施設 北品川ゆうゆうプラザ"],
+      ["ふじみ野市", "ふじみ野市立介護予防センター"]
+    ];
+
+    const facilities = centerMaster.map(([ward, name]) => ({
+      ward,
+      name,
+      event: "台風",
+      wardPolicy: "自治体の災害時施設運営方針を確認して入力してください。",
+      corporatePolicy: "法人本部で休館・短縮運営・通常運営の判断基準を確認してください。",
+      facilityPolicy: "施設ごとの運営方針、連絡体制、利用者対応を入力してください。",
+      status: "判断待ち",
+      requiredStaff: 0,
+      availableStaff: 0,
+      supplies: { sandbags: 0, raincoats: 0, helmets: 0, gloves: 0 },
+      shortage: "方針・備品数の確認",
+      updated: sourceUpdated
+    }));
+
+    const storageKey = "publicServiceDisasterReports";
+    let reports = JSON.parse(localStorage.getItem(storageKey) || "[]");
+
+    const els = {
+      pageTitle: document.getElementById("pageTitle"),
+      sidebar: document.getElementById("sidebar"),
+      statusRows: document.getElementById("statusRows"),
+      policyRows: document.getElementById("policyRows"),
+      resourceRows: document.getElementById("resourceRows"),
+      priorityList: document.getElementById("priorityList"),
+      wardFilter: document.getElementById("wardFilter"),
+      policySearch: document.getElementById("policySearch"),
+      facility: document.getElementById("facility"),
+      recentReports: document.getElementById("recentReports"),
+      reportOutput: document.getElementById("reportOutput")
+    };
+
+    function statusTag(status) {
+      if (status.includes("休止") || status.includes("待ち")) return "warn";
+      if (status.includes("休館")) return "danger";
+      return "ok";
+    }
+
+    function shortageTag(text) {
+      return text === "なし" ? '<span class="tag ok">不足なし</span>' : `<span class="tag danger">${text}</span>`;
+    }
+
+    function renderDashboard() {
+      els.statusRows.innerHTML = facilities.map((f) => `
+        <tr>
+          <td>${f.ward}</td>
+          <td>${f.name}</td>
+          <td>${f.event}</td>
+          <td><span class="tag ${statusTag(f.status)}">${f.status}</span></td>
+          <td>${f.availableStaff}/${f.requiredStaff}名</td>
+          <td>${shortageTag(f.shortage)}</td>
+        </tr>
+      `).join("");
+
+      const priorities = facilities
+        .filter((f) => f.shortage !== "なし" || f.status.includes("待ち") || f.availableStaff < f.requiredStaff)
+        .map((f) => `
+          <div class="list-item">
+            <strong>${f.name}：${f.status}</strong>
+            <span>${f.shortage} / ${f.facilityPolicy}</span>
+          </div>
+        `);
+      els.priorityList.innerHTML = priorities.join("") || '<div class="list-item"><strong>優先対応なし</strong><span>現時点で不足や判断待ちはありません。</span></div>';
+
+      document.getElementById("facilityCount").textContent = facilities.length;
+      document.getElementById("attentionCount").textContent = priorities.length;
+      document.getElementById("reportCount").textContent = reports.length;
+      document.getElementById("shortageCount").textContent = facilities.filter((f) => f.shortage !== "なし").length;
+    }
+
+    function renderPolicies() {
+      const ward = els.wardFilter.value;
+      const q = els.policySearch.value.trim();
+      els.policyRows.innerHTML = facilities
+        .filter((f) => !ward || f.ward === ward)
+        .filter((f) => !q || `${f.name}${f.wardPolicy}${f.corporatePolicy}${f.facilityPolicy}`.includes(q))
+        .map((f) => `
+          <tr>
+            <td>${f.ward}</td>
+            <td>${f.name}</td>
+            <td>${f.wardPolicy}</td>
+            <td>${f.corporatePolicy}</td>
+            <td>${f.facilityPolicy}</td>
+            <td>${f.updated}</td>
+          </tr>
+        `).join("");
+    }
+
+    function renderResources() {
+      els.resourceRows.innerHTML = facilities.map((f) => `
+        <tr>
+          <td>${f.name}</td>
+          <td>${f.requiredStaff}名</td>
+          <td>${f.availableStaff}名</td>
+          <td>${f.supplies.sandbags}</td>
+          <td>${f.supplies.raincoats}</td>
+          <td>${f.supplies.helmets}</td>
+          <td>${f.supplies.gloves}</td>
+          <td>${shortageTag(f.shortage)}</td>
+        </tr>
+      `).join("");
+    }
+
+    function renderRecentReports() {
+      const rows = reports.slice().reverse().map((r) => `
+        <div class="list-item">
+          <strong>${r.time} ${r.facility} <span class="tag ${r.urgency === "高" ? "danger" : r.urgency === "中" ? "warn" : "ok"}">緊急度${r.urgency}</span></strong>
+          <span>${r.operation} / ${r.needs || "支援要請なし"} / 報告者：${r.reporter}</span>
+        </div>
+      `);
+      els.recentReports.innerHTML = rows.join("") || '<div class="list-item"><strong>報告はまだありません</strong><span>左のフォームから現場報告を登録できます。</span></div>';
+    }
+
+    function makeReportText() {
+      const date = new Date().toLocaleString("ja-JP");
+      const lines = [
+        "災害時対応 事後報告書",
+        `作成日時：${date}`,
+        "",
+        "1. 対象施設の運営状況",
+        ...facilities.map((f) => `・${f.ward} ${f.name}：${f.status}（${f.event}） / 人員 ${f.availableStaff}/${f.requiredStaff}名 / 不足：${f.shortage}`),
+        "",
+        "2. 区の基本方針と法人側判断",
+        ...facilities.map((f) => `・${f.name}：区方針「${f.wardPolicy}」 法人判断「${f.corporatePolicy}」`),
+        "",
+        "3. 現場からの報告",
+        ...(reports.length ? reports.map((r) => `・${r.time} ${r.facility}：${r.operation}、利用者状況「${r.users || "記載なし"}」、職員配置「${r.staff || "記載なし"}」、建物・周辺「${r.damage || "記載なし"}」、支援要請「${r.needs || "なし"}」、緊急度${r.urgency}`) : ["・現時点で追加報告なし"]),
+        "",
+        "4. 今後の対応",
+        "・不足備品の手配状況を法人本部で確認する。",
+        "・区から追加方針が出た場合は、施設方針マスタを更新する。",
+        "・次回災害対応時も同じフォームで報告し、自治体・法人・現場で同一情報を共有する。"
+      ];
+      return lines.join("\n");
+    }
+
+    function renderReportOutput() {
+      els.reportOutput.textContent = makeReportText();
+    }
+
+    function saveReports() {
+      localStorage.setItem(storageKey, JSON.stringify(reports));
+    }
+
+    function exportCsv() {
+      const header = ["時刻", "施設", "報告者", "災害種別", "運営状況", "利用者状況", "職員配置", "建物周辺", "緊急度", "支援要請"];
+      const rows = reports.map((r) => [r.time, r.facility, r.reporter, r.eventType, r.operation, r.users, r.staff, r.damage, r.urgency, r.needs]);
+      const csv = [header, ...rows].map((row) => row.map((cell) => `"${String(cell || "").replaceAll('"', '""')}"`).join(",")).join("\n");
+      const blob = new Blob(["\ufeff" + csv], { type: "text/csv;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "災害時現場報告.csv";
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function switchSection(id) {
+      document.querySelectorAll(".section").forEach((section) => section.classList.toggle("active", section.id === id));
+      document.querySelectorAll(".nav button").forEach((btn) => btn.classList.toggle("active", btn.dataset.section === id));
+      const active = document.querySelector(`.nav button[data-section="${id}"]`);
+      els.pageTitle.textContent = active ? active.textContent.trim().replace(/[⌂⇄◇□▦＋↧]/g, "") : "ダッシュボード";
+      els.sidebar.classList.remove("open");
+      if (id === "reports") renderReportOutput();
+    }
+
+    function init() {
+      const wards = [...new Set(facilities.map((f) => f.ward))];
+      els.wardFilter.insertAdjacentHTML("beforeend", wards.map((w) => `<option>${w}</option>`).join(""));
+      els.facility.innerHTML = facilities.map((f) => `<option>${f.name}</option>`).join("");
+
+      document.querySelectorAll(".nav button").forEach((btn) => {
+        btn.addEventListener("click", () => switchSection(btn.dataset.section));
+      });
+
+      document.getElementById("menuBtn").addEventListener("click", () => els.sidebar.classList.add("open"));
+      els.wardFilter.addEventListener("change", renderPolicies);
+      els.policySearch.addEventListener("input", renderPolicies);
+      document.getElementById("csvBtn").addEventListener("click", exportCsv);
+      document.getElementById("printBtn").addEventListener("click", () => {
+        switchSection("reports");
+        window.print();
+      });
+      document.getElementById("refreshReportBtn").addEventListener("click", renderReportOutput);
+      document.getElementById("copyReportBtn").addEventListener("click", async () => {
+        const text = makeReportText();
+        try {
+          await navigator.clipboard.writeText(text);
+          alert("事後報告文面をコピーしました。");
+        } catch (error) {
+          const selection = window.getSelection();
+          const range = document.createRange();
+          range.selectNodeContents(els.reportOutput);
+          selection.removeAllRanges();
+          selection.addRange(range);
+          alert("コピーが制限されたため、文面を選択しました。Ctrl+Cでコピーできます。");
+        }
+      });
+
+      document.getElementById("reportForm").addEventListener("submit", (event) => {
+        event.preventDefault();
+        const now = new Date().toLocaleString("ja-JP", { month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" });
+        reports.push({
+          time: now,
+          facility: document.getElementById("facility").value,
+          reporter: document.getElementById("reporter").value,
+          eventType: document.getElementById("eventType").value,
+          operation: document.getElementById("operation").value,
+          users: document.getElementById("users").value,
+          staff: document.getElementById("staff").value,
+          damage: document.getElementById("damage").value,
+          urgency: document.getElementById("urgency").value,
+          needs: document.getElementById("needs").value
+        });
+        saveReports();
+        event.target.reset();
+        renderAll();
+        switchSection("reports");
+      });
+
+      renderAll();
+    }
+
+    function renderAll() {
+      renderDashboard();
+      renderPolicies();
+      renderResources();
+      renderRecentReports();
+      renderReportOutput();
+    }
+
+    init();
+  </script>
+</body>
+</html>
