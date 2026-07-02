@@ -378,6 +378,43 @@
       color: #6b4200;
     }
 
+    .alert-hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      background: #fff7ed;
+      border: 1px solid #f4b26b;
+      border-left: 6px solid var(--warn);
+      border-radius: 8px;
+      padding: 14px 16px;
+      box-shadow: var(--shadow);
+    }
+
+    .alert-hero strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .image-preview {
+      display: grid;
+      grid-template-columns: 96px minmax(0, 1fr);
+      gap: 10px;
+      align-items: center;
+      border: 1px dashed var(--line);
+      border-radius: 8px;
+      padding: 10px;
+      background: #fbfcfd;
+    }
+
+    .image-preview img {
+      width: 96px;
+      height: 72px;
+      object-fit: cover;
+      border-radius: 6px;
+      border: 1px solid var(--line);
+    }
+
     .error-card {
       background: var(--soft-danger);
       border-color: #f4b8b2;
@@ -608,6 +645,13 @@
         <div id="errorArea" class="no-print"></div>
         <div id="cacheBanner" class="cache-banner hidden"></div>
         <div id="successArea" class="no-print"></div>
+        <div class="alert-hero no-print" id="weatherAlert">
+          <div>
+            <strong>台風・大雨などの接近情報を確認したら、各施設の準備状況を入力してください。</strong>
+            <span class="muted">現在は手動確認用のアラートです。将来は気象庁情報や運用承認済みAPIと連携し、東京接近時に自動表示する設計にできます。</span>
+          </div>
+          <button class="btn warn" id="alertInputBtn" type="button">施設入力へ</button>
+        </div>
 
         <section class="section active" id="dashboard">
           <div class="metrics">
@@ -888,6 +932,17 @@
                     <small id="needsCounter" class="muted">0/500</small>
                   </div>
                   <div class="field full">
+                    <label for="facilityImage">施設状況画像 任意</label>
+                    <input id="facilityImage" type="file" accept="image/*">
+                    <div id="imagePreview" class="image-preview hidden">
+                      <img id="imagePreviewImg" alt="添付画像プレビュー">
+                      <div>
+                        <strong id="imagePreviewName">画像プレビュー</strong>
+                        <span class="muted">初期版では、このブラウザ内に一時保存します。本番運用ではサーバーまたはDriveへ保存します。</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="field full">
                     <div class="actions">
                       <button class="btn" type="submit">保存前確認へ</button>
                       <button class="btn secondary" id="clearDraftBtn" type="button">一時保存を破棄</button>
@@ -922,6 +977,8 @@
               <div class="actions no-print">
                 <button class="btn secondary" id="copyTableBtn" type="button">表をコピー</button>
                 <button class="btn secondary" id="copyReportBtn" type="button">報告文をコピー</button>
+                <button class="btn secondary" id="contactCsvBtn" type="button">連絡状況CSV</button>
+                <button class="btn secondary" id="copyReminderBtn" type="button">リマインド文面</button>
                 <button class="btn secondary" id="refreshReportBtn" type="button">再生成</button>
               </div>
             </div>
@@ -1213,6 +1270,7 @@
     let logs = loadJson(storageKeys.logs, []);
     let history = loadJson(storageKeys.history, []);
     let pendingSave = null;
+    let attachedImage = null;
     let dashboardFilter = "all";
     let reportViewMode = "all";
 
@@ -1401,6 +1459,8 @@
         staffConcern: document.getElementById("staffConcern").value.trim(),
         supplyConcern: document.getElementById("supplyConcern").value.trim(),
         needs: document.getElementById("needs").value.trim(),
+        imageName: attachedImage?.name || "",
+        imageDataUrl: attachedImage?.dataUrl || "",
         lastSavedAt: nowText(),
         active: true
       };
@@ -1444,6 +1504,7 @@
         `備品不足：${data.supplyConcern || "なし"}`,
         `人員体制の懸念：${data.staffConcern || "なし"}`,
         `特記事項：${data.needs || "なし"}`,
+        `添付画像：${data.imageName || "なし"}`,
         warnings.length ? `\n警告：${warnings.join(" / ")}` : ""
       ].join("\n");
       document.getElementById("confirmModal").classList.add("open");
@@ -1470,6 +1531,10 @@
         closeConfirm();
         document.getElementById("reportForm").reset();
         document.getElementById("reportDate").value = todayDateValue();
+        attachedImage = null;
+        document.getElementById("imagePreview").classList.add("hidden");
+        document.getElementById("imagePreviewImg").removeAttribute("src");
+        document.getElementById("imagePreviewName").textContent = "画像プレビュー";
         pendingSave = null;
         updateCounter();
         renderAll();
@@ -1564,6 +1629,7 @@
         <div class="list-item">
           <strong>${escapeHtml(r.facility)} <span class="tag ${statusClass(r.status)}">${escapeHtml(r.status)}</span></strong>
           <span>保存：${escapeHtml(r.lastSavedAt)} / 更新者：${escapeHtml(r.reporter || "未入力")} / 自治体報告：${escapeHtml(r.municipalityStatus)}</span>
+          ${r.imageDataUrl ? `<div class="image-preview" style="margin-top:8px;"><img src="${escapeHtml(r.imageDataUrl)}" alt="${escapeHtml(r.imageName || "添付画像")}"><div><strong>${escapeHtml(r.imageName || "添付画像")}</strong><span class="muted">施設状況画像</span></div></div>` : ""}
           <div class="actions no-print" style="margin-top:8px;"><button class="btn secondary small" type="button" onclick="softDisableReport('${r.id}')">無効化</button></div>
         </div>
       `).join("") || `<div class="list-item"><strong>保存済み報告はありません</strong><span>左のフォームから入力できます。</span></div>`;
@@ -1707,10 +1773,93 @@
       }
     }
 
+    function unconfirmedFacilities() {
+      const reported = new Set(activeReports().map((report) => report.facility));
+      return mergedFacilities().filter((facility) => !reported.has(facility.name) || facility.status === "未入力");
+    }
+
+    function exportContactCsv() {
+      try {
+        const latest = latestReportByFacility();
+        const header = ["区", "施設名", "連絡状況", "対応ステータス", "自治体報告", "最終連絡日時", "最終更新者", "リマインド対象"];
+        const rows = mergedFacilities().map((facility) => {
+          const report = latest.get(facility.name);
+          const unconfirmed = !report || facility.status === "未入力";
+          return [
+            facility.ward,
+            facility.name,
+            report ? "連絡あり" : "未確認",
+            facility.status,
+            facility.municipalityStatus,
+            report?.lastSavedAt || "",
+            report?.reporter || "",
+            unconfirmed ? "対象" : ""
+          ];
+        });
+        const csv = [header, ...rows].map((row) => row.map((cell) => `"${String(cell || "").replaceAll('"', '""')}"`).join(",")).join("\n");
+        const blob = new Blob(["\ufeff" + csv], { type: "text/csv;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "災害対応_全施設連絡状況.csv";
+        a.click();
+        URL.revokeObjectURL(url);
+      } catch (error) {
+        showError("E004", { operation: "連絡状況CSV出力", detail: error.message });
+      }
+    }
+
+    function makeReminderText() {
+      const rows = unconfirmedFacilities();
+      const names = rows.map((facility) => `・${facility.name}`).join("\n") || "対象施設なし";
+      return [
+        "【災害対応準備状況の入力依頼】",
+        "",
+        "災害対応ポータルで、台風・大雨等に備えた施設準備状況の入力をお願いします。",
+        "未入力または確認が取れていない施設は以下です。",
+        "",
+        names,
+        "",
+        "入力内容：対応ステータス、自治体報告ステータス、備品不足、人員体制の懸念、特記事項",
+        "入力後、本部で全施設の状況を確認し、必要に応じて自治体・法人向け報告に反映します。",
+        "",
+        "ポータルが使えない場合は、障害時モードの手動報告テンプレートをLINE WORKSまたはメールで送ってください。"
+      ].join("\n");
+    }
+
     function copyVisibleTable() {
       const rows = reportTargets();
       const text = rows.map((f) => [f.ward, f.name, f.status, f.municipalityStatus, f.supplyConcern || "なし", f.staffConcern || "なし", f.notes || "なし"].join("\t")).join("\n");
       copyText(text, "画面上の表をコピーしました。");
+    }
+
+    function handleImageSelection(event) {
+      const file = event.target.files?.[0];
+      if (!file) {
+        attachedImage = null;
+        document.getElementById("imagePreview").classList.add("hidden");
+        return;
+      }
+      if (!file.type.startsWith("image/")) {
+        showError("E006", { operation: "画像添付", detail: "画像ファイル以外が選択されました。" });
+        event.target.value = "";
+        return;
+      }
+      if (file.size > 1024 * 1024) {
+        showError("E006", { operation: "画像添付", detail: "画像サイズが1MBを超えています。初期版では小さい画像を添付してください。" });
+        event.target.value = "";
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = () => {
+        attachedImage = { name: file.name, dataUrl: reader.result };
+        document.getElementById("imagePreviewImg").src = reader.result;
+        document.getElementById("imagePreviewName").textContent = file.name;
+        document.getElementById("imagePreview").classList.remove("hidden");
+        autosaveDraft();
+      };
+      reader.onerror = () => showError("E006", { operation: "画像添付", detail: "画像の読み込みに失敗しました。" });
+      reader.readAsDataURL(file);
     }
 
     function runTests() {
@@ -1765,12 +1914,15 @@
       document.querySelectorAll(".nav button").forEach((btn) => btn.addEventListener("click", () => switchSection(btn.dataset.section)));
       document.getElementById("menuBtn").addEventListener("click", () => els.sidebar.classList.add("open"));
       document.querySelectorAll("[data-filter]").forEach((btn) => btn.addEventListener("click", () => { dashboardFilter = btn.dataset.filter; renderDashboard(); }));
+      document.getElementById("alertInputBtn").addEventListener("click", () => switchSection("submit"));
       document.getElementById("simulateFetchBtn").addEventListener("click", simulateFetchFailure);
       document.getElementById("csvBtn").addEventListener("click", exportCsv);
       document.getElementById("incidentBtn").addEventListener("click", () => switchSection("incident"));
       document.getElementById("printBtn").addEventListener("click", () => { switchSection("reports"); window.print(); });
       document.getElementById("copyTableBtn").addEventListener("click", copyVisibleTable);
       document.getElementById("copyReportBtn").addEventListener("click", () => copyText(makeReportText(), "報告文をコピーしました。"));
+      document.getElementById("contactCsvBtn").addEventListener("click", exportContactCsv);
+      document.getElementById("copyReminderBtn").addEventListener("click", () => copyText(makeReminderText(), "未確認施設へのリマインド文面をコピーしました。"));
       document.getElementById("copyChecklistBtn").addEventListener("click", () => copyText(makeChecklistText(), "災害チェック項目をコピーしました。"));
       document.getElementById("copyShiftBtn").addEventListener("click", () => copyText(makeShiftText(), "夜間対応シフトをコピーしました。"));
       document.getElementById("refreshReportBtn").addEventListener("click", renderReportOutput);
@@ -1787,6 +1939,7 @@
       document.getElementById("confirmSaveBtn").addEventListener("click", savePendingReport);
       document.getElementById("clearDraftBtn").addEventListener("click", () => { localStorage.removeItem(storageKeys.draft); document.getElementById("draftNotice").textContent = "一時保存はありません。"; });
       document.getElementById("needs").addEventListener("input", updateCounter);
+      document.getElementById("facilityImage").addEventListener("change", handleImageSelection);
       document.getElementById("reportForm").addEventListener("input", autosaveDraft);
       document.getElementById("reportForm").addEventListener("submit", (event) => {
         event.preventDefault();
