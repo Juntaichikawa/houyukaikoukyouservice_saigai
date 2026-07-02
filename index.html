@@ -6,24 +6,24 @@
   <title>公共サービス災害対応ポータル</title>
   <style>
     :root {
-      --bg: #f6f7f4;
+      --bg: #f5f7f8;
       --panel: #ffffff;
-      --ink: #1f2933;
+      --ink: #17212b;
       --muted: #667085;
-      --line: #d7ddd5;
-      --accent: #256f63;
-      --accent-2: #bd5d38;
-      --warn: #b45309;
+      --line: #d7dde5;
+      --accent: #176b5d;
+      --accent-dark: #0f4d43;
+      --warn: #a65f00;
       --danger: #b42318;
       --ok: #24794f;
-      --soft: #e9f2ef;
-      --soft-2: #f4e8df;
-      --shadow: 0 10px 30px rgba(31, 41, 51, 0.08);
+      --info: #2358a8;
+      --soft: #eaf4f1;
+      --soft-warn: #fff4dd;
+      --soft-danger: #fff0ee;
+      --shadow: 0 12px 28px rgba(23, 33, 43, 0.08);
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -33,10 +33,7 @@
       line-height: 1.55;
     }
 
-    button,
-    input,
-    select,
-    textarea {
+    button, input, select, textarea {
       font: inherit;
     }
 
@@ -48,12 +45,12 @@
     .app {
       min-height: 100vh;
       display: grid;
-      grid-template-columns: 248px minmax(0, 1fr);
+      grid-template-columns: 260px minmax(0, 1fr);
     }
 
     .sidebar {
-      background: #172b2a;
-      color: #f8faf8;
+      background: #142b29;
+      color: #f8fafc;
       padding: 24px 18px;
       position: sticky;
       top: 0;
@@ -61,50 +58,46 @@
       overflow: auto;
     }
 
-    .brand {
-      margin-bottom: 26px;
-    }
-
     .brand strong {
       display: block;
-      font-size: 19px;
-      letter-spacing: 0;
+      font-size: 18px;
     }
 
     .brand span {
       display: block;
-      color: #b8c7c4;
+      margin-top: 6px;
+      color: #b9cbc8;
       font-size: 12px;
-      margin-top: 4px;
     }
 
     .nav {
       display: grid;
       gap: 8px;
+      margin-top: 24px;
     }
 
     .nav button {
-      width: 100%;
-      text-align: left;
-      background: transparent;
-      color: #dbe7e4;
-      border-radius: 8px;
-      padding: 10px 12px;
       display: flex;
       align-items: center;
       gap: 10px;
+      width: 100%;
+      color: #d8e5e2;
+      background: transparent;
+      padding: 11px 12px;
+      border-radius: 8px;
+      text-align: left;
     }
 
     .nav button.active,
     .nav button:hover {
-      background: #25423f;
+      background: rgba(255,255,255,0.12);
       color: #ffffff;
     }
 
-    .nav .icon {
-      width: 20px;
+    .icon {
+      width: 24px;
       text-align: center;
-      flex: 0 0 auto;
+      opacity: 0.95;
     }
 
     .main {
@@ -112,76 +105,131 @@
     }
 
     .topbar {
+      background: var(--panel);
+      border-bottom: 1px solid var(--line);
+      padding: 22px 28px;
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      gap: 16px;
-      padding: 22px 28px;
-      background: rgba(246, 247, 244, 0.9);
-      backdrop-filter: blur(10px);
+      gap: 18px;
+      align-items: flex-start;
       position: sticky;
       top: 0;
-      z-index: 5;
-      border-bottom: 1px solid var(--line);
+      z-index: 20;
+    }
+
+    h1, h2, h3, p {
+      margin-top: 0;
     }
 
     h1 {
-      margin: 0;
+      margin-bottom: 4px;
       font-size: 24px;
-      line-height: 1.25;
     }
 
-    .topbar p {
-      margin: 4px 0 0;
+    h2 {
+      font-size: 20px;
+      margin-bottom: 4px;
+    }
+
+    h3 {
+      font-size: 16px;
+      margin-bottom: 8px;
+    }
+
+    .topbar p,
+    .panel-head p,
+    .muted {
       color: var(--muted);
+      margin-bottom: 0;
       font-size: 13px;
     }
 
-    .actions {
+    .actions, .toolbar {
       display: flex;
-      align-items: center;
-      gap: 10px;
       flex-wrap: wrap;
-      justify-content: flex-end;
+      gap: 8px;
+      align-items: center;
     }
 
     .btn {
-      min-height: 40px;
-      border-radius: 8px;
-      padding: 9px 14px;
       background: var(--accent);
-      color: #fff;
+      color: white;
+      padding: 9px 13px;
+      border-radius: 8px;
+      font-weight: 700;
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      white-space: nowrap;
-      box-shadow: 0 2px 0 rgba(0, 0, 0, 0.08);
+      justify-content: center;
+      gap: 6px;
+      min-height: 38px;
     }
 
     .btn.secondary {
-      background: #ffffff;
+      background: #edf2f4;
       color: var(--ink);
       border: 1px solid var(--line);
-      box-shadow: none;
     }
 
     .btn.warn {
-      background: var(--accent-2);
+      background: var(--warn);
+    }
+
+    .btn.danger {
+      background: var(--danger);
+    }
+
+    .btn.small {
+      min-height: 30px;
+      padding: 5px 9px;
+      font-size: 12px;
     }
 
     .content {
-      padding: 24px 28px 42px;
+      padding: 24px 28px 40px;
       display: grid;
-      gap: 22px;
+      gap: 18px;
     }
 
     .section {
       display: none;
+      gap: 18px;
     }
 
     .section.active {
       display: grid;
-      gap: 22px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .panel-head {
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      gap: 12px;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .panel-body {
+      padding: 18px 20px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 18px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
     }
 
     .metrics {
@@ -199,88 +247,41 @@
     }
 
     .metric span {
+      display: block;
       color: var(--muted);
       font-size: 12px;
     }
 
     .metric strong {
       display: block;
-      margin-top: 8px;
-      font-size: 28px;
-      line-height: 1;
-    }
-
-    .metric small {
-      display: block;
-      margin-top: 8px;
-      color: var(--muted);
-    }
-
-    .grid-2 {
-      display: grid;
-      grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
-      gap: 18px;
-    }
-
-    .panel {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      box-shadow: var(--shadow);
-      min-width: 0;
-      overflow: hidden;
-    }
-
-    .panel-head {
-      padding: 16px 18px;
-      border-bottom: 1px solid var(--line);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-    }
-
-    .panel-head h2 {
-      margin: 0;
-      font-size: 17px;
-    }
-
-    .panel-head p {
-      margin: 4px 0 0;
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    .panel-body {
-      padding: 16px 18px 18px;
+      font-size: 30px;
+      margin: 4px 0;
     }
 
     .table-wrap {
-      width: 100%;
-      overflow-x: auto;
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
     }
 
     table {
       width: 100%;
+      min-width: 760px;
       border-collapse: collapse;
-      min-width: 820px;
+      background: white;
     }
 
-    th,
-    td {
-      padding: 11px 10px;
+    th, td {
+      padding: 10px 12px;
       border-bottom: 1px solid var(--line);
-      text-align: left;
       vertical-align: top;
+      text-align: left;
       font-size: 13px;
     }
 
     th {
-      background: #f0f3ef;
-      color: #39434d;
-      font-size: 12px;
-      position: sticky;
-      top: 0;
+      background: #f0f4f6;
+      white-space: nowrap;
     }
 
     tr:last-child td {
@@ -291,28 +292,18 @@
       display: inline-flex;
       align-items: center;
       border-radius: 999px;
-      padding: 3px 9px;
+      padding: 3px 8px;
       font-size: 12px;
       font-weight: 700;
+      background: #edf2f4;
+      color: var(--ink);
       white-space: nowrap;
-      background: var(--soft);
-      color: var(--accent);
     }
 
-    .tag.warn {
-      background: #fff4df;
-      color: var(--warn);
-    }
-
-    .tag.danger {
-      background: #fff0ee;
-      color: var(--danger);
-    }
-
-    .tag.ok {
-      background: #eaf6ee;
-      color: var(--ok);
-    }
+    .tag.ok { background: #e6f4ec; color: var(--ok); }
+    .tag.warn { background: var(--soft-warn); color: var(--warn); }
+    .tag.danger { background: var(--soft-danger); color: var(--danger); }
+    .tag.info { background: #eaf1ff; color: var(--info); }
 
     .list {
       display: grid;
@@ -323,19 +314,17 @@
       border: 1px solid var(--line);
       border-radius: 8px;
       padding: 12px;
-      background: #fff;
+      background: #fbfcfd;
     }
 
     .list-item strong {
       display: block;
-      font-size: 14px;
+      margin-bottom: 4px;
     }
 
     .list-item span {
-      display: block;
       color: var(--muted);
-      font-size: 12px;
-      margin-top: 4px;
+      font-size: 13px;
     }
 
     .form-grid {
@@ -354,257 +343,209 @@
     }
 
     label {
-      font-size: 12px;
       font-weight: 700;
-      color: #41505c;
+      font-size: 13px;
     }
 
-    input,
-    select,
-    textarea {
-      width: 100%;
+    input, select, textarea {
       border: 1px solid var(--line);
       border-radius: 8px;
       padding: 10px 11px;
-      background: #fff;
+      background: white;
       color: var(--ink);
-      min-height: 40px;
+      width: 100%;
     }
 
     textarea {
-      min-height: 94px;
+      min-height: 96px;
       resize: vertical;
     }
 
-    .report-box {
-      background: #fbfcfa;
+    .notice,
+    .cache-banner,
+    .error-card,
+    .success-card {
+      border-radius: 8px;
+      padding: 12px 14px;
       border: 1px solid var(--line);
+      background: #f8fafc;
+      font-size: 13px;
+    }
+
+    .cache-banner {
+      background: var(--soft-warn);
+      border-color: #f4c26b;
+      color: #6b4200;
+    }
+
+    .error-card {
+      background: var(--soft-danger);
+      border-color: #f4b8b2;
+    }
+
+    .success-card {
+      background: #e6f4ec;
+      border-color: #9fd8b9;
+      color: #165a38;
+    }
+
+    .error-card h3,
+    .success-card h3 {
+      margin: 0 0 8px;
+    }
+
+    .error-meta {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 6px 14px;
+      margin: 8px 0 10px;
+    }
+
+    .error-meta b {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .report-box,
+    .template-box {
+      background: #101828;
+      color: #f8fafc;
       border-radius: 8px;
       padding: 16px;
       white-space: pre-wrap;
-      font-family: "Yu Gothic", "Meiryo", sans-serif;
-      min-height: 280px;
       overflow: auto;
+      min-height: 220px;
+      font-family: "Yu Gothic", "Meiryo", monospace;
+      font-size: 13px;
     }
 
-    .toolbar {
+    .template-box {
+      background: #f8fafc;
+      color: var(--ink);
+      border: 1px solid var(--line);
+    }
+
+    .filter-row {
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
       flex-wrap: wrap;
+      gap: 8px;
       margin-bottom: 12px;
     }
 
-    .filters {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-
-    .filters select,
-    .filters input {
-      width: auto;
-      min-width: 160px;
-    }
-
-    .notice {
-      border-left: 4px solid var(--accent-2);
-      background: var(--soft-2);
-      padding: 12px 14px;
-      border-radius: 8px;
-      color: #57311f;
-      font-size: 13px;
-    }
-
-    .flow-stage {
-      display: grid;
-      grid-template-columns: repeat(5, minmax(140px, 1fr));
-      gap: 12px;
-      align-items: stretch;
-    }
-
-    .flow-card {
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: #ffffff;
-      padding: 14px;
-      position: relative;
-      min-height: 132px;
-    }
-
-    .flow-card:not(:last-child)::after {
-      content: "→";
-      position: absolute;
-      right: -16px;
-      top: 48px;
-      color: var(--accent);
-      font-weight: 800;
-      font-size: 22px;
-      z-index: 1;
-    }
-
-    .flow-card b {
-      display: block;
-      font-size: 13px;
-      color: var(--accent);
-      margin-bottom: 8px;
-    }
-
-    .flow-card strong {
-      display: block;
-      font-size: 15px;
-      margin-bottom: 8px;
-    }
-
-    .flow-card span {
-      display: block;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .swimlane {
-      display: grid;
-      gap: 10px;
-    }
-
-    .lane {
-      display: grid;
-      grid-template-columns: 150px repeat(4, minmax(0, 1fr));
-      border: 1px solid var(--line);
-      border-radius: 8px;
+    .progress {
+      height: 10px;
+      background: #e5e9ef;
+      border-radius: 999px;
       overflow: hidden;
-      background: #fff;
     }
 
-    .lane-title {
-      background: #edf3f1;
-      font-weight: 800;
-      padding: 14px;
-      display: flex;
+    .progress > span {
+      display: block;
+      height: 100%;
+      background: var(--accent);
+      width: 0;
+    }
+
+    .help-button {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      z-index: 50;
+      border-radius: 999px;
+      box-shadow: var(--shadow);
+    }
+
+    .hidden { display: none !important; }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.42);
+      display: none;
       align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 100;
     }
 
-    .lane-cell {
-      min-height: 74px;
-      padding: 12px;
-      border-left: 1px solid var(--line);
-      display: grid;
-      align-content: center;
-      gap: 4px;
-      font-size: 13px;
+    .modal.open {
+      display: flex;
     }
 
-    .lane-cell small {
-      color: var(--muted);
-    }
-
-    .product-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
-    }
-
-    .product-card {
-      border: 1px solid var(--line);
+    .modal-card {
+      width: min(760px, 100%);
+      max-height: min(820px, 92vh);
+      overflow: auto;
+      background: var(--panel);
       border-radius: 8px;
-      background: #fff;
-      padding: 16px;
-      min-height: 180px;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
     }
 
-    .product-card h3 {
-      margin: 0 0 8px;
-      font-size: 16px;
+    .modal-card header {
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
     }
 
-    .product-card p {
-      color: var(--muted);
-      margin: 0;
-      font-size: 13px;
-    }
-
-    .product-card ul {
-      margin: 12px 0 0;
-      padding-left: 18px;
-      color: #344054;
-      font-size: 13px;
+    .modal-card .body {
+      padding: 18px;
     }
 
     .mobile-menu {
       display: none;
     }
 
-    @media (max-width: 940px) {
+    @media (max-width: 980px) {
       .app {
-        grid-template-columns: 1fr;
+        display: block;
       }
 
       .sidebar {
+        display: none;
         position: fixed;
         inset: 0 auto 0 0;
-        width: min(82vw, 300px);
-        transform: translateX(-105%);
-        transition: transform 160ms ease;
-        z-index: 10;
+        width: min(300px, 88vw);
+        z-index: 90;
       }
 
       .sidebar.open {
-        transform: translateX(0);
+        display: block;
       }
 
       .mobile-menu {
         display: inline-flex;
       }
 
-      .topbar {
-        align-items: flex-start;
+      .topbar,
+      .panel-head {
         flex-direction: column;
       }
 
       .metrics,
       .grid-2,
+      .grid-3,
       .form-grid,
-      .flow-stage,
-      .product-grid {
+      .error-meta {
         grid-template-columns: 1fr;
-      }
-
-      .flow-card:not(:last-child)::after {
-        content: "↓";
-        right: 18px;
-        top: auto;
-        bottom: -22px;
-      }
-
-      .lane {
-        grid-template-columns: 1fr;
-      }
-
-      .lane-cell {
-        border-left: 0;
-        border-top: 1px solid var(--line);
       }
 
       .content {
-        padding: 18px 16px 32px;
+        padding: 16px;
       }
     }
 
     @media print {
-      .sidebar,
-      .topbar,
-      .no-print {
+      .sidebar, .topbar, .no-print, .help-button, .modal {
         display: none !important;
       }
 
       .app {
         display: block;
-      }
-
-      body {
-        background: #fff;
       }
 
       .content {
@@ -631,76 +572,69 @@
     <aside class="sidebar" id="sidebar">
       <div class="brand">
         <strong>災害対応ポータル</strong>
-        <span>現場・法人・自治体 共有版</span>
+        <span>施設・法人・自治体向け共有基盤</span>
       </div>
       <nav class="nav" aria-label="画面切替">
-        <button class="active" data-section="dashboard"><span class="icon">⌂</span>ダッシュボード</button>
-        <button data-section="workflow"><span class="icon">⇄</span>対応フロー</button>
-        <button data-section="product"><span class="icon">◇</span>販売設計</button>
-        <button data-section="policies"><span class="icon">□</span>区・施設方針</button>
-        <button data-section="resources"><span class="icon">▦</span>備品・人員</button>
-        <button data-section="submit"><span class="icon">＋</span>現場報告入力</button>
-        <button data-section="reports"><span class="icon">↧</span>事後報告出力</button>
+        <button class="active" data-section="dashboard"><span class="icon">■</span>ダッシュボード</button>
+        <button data-section="workflow"><span class="icon">→</span>対応フロー</button>
+        <button data-section="submit"><span class="icon">＋</span>現場入力</button>
+        <button data-section="reports"><span class="icon">□</span>報告出力</button>
+        <button data-section="incident"><span class="icon">!</span>障害時モード</button>
+        <button data-section="logs"><span class="icon">◇</span>管理者ログ</button>
+        <button data-section="help"><span class="icon">?</span>困ったとき</button>
+        <button data-section="tests"><span class="icon">✓</span>テスト</button>
       </nav>
     </aside>
 
     <main class="main">
       <header class="topbar">
         <div>
-          <button class="btn secondary mobile-menu" id="menuBtn" type="button">☰ メニュー</button>
+          <button class="btn secondary mobile-menu" id="menuBtn" type="button">メニュー</button>
           <h1 id="pageTitle">ダッシュボード</h1>
-          <p>台風・大雨・地震などの対応状況を、同じ情報源から確認・報告・出力できます。施設初期データ：奉優会 施設一覧</p>
+          <p>災害前後の施設方針、備品、人員、自治体報告を一元管理する販売想定プロトタイプです。</p>
         </div>
         <div class="actions no-print">
+          <button class="btn secondary" id="simulateFetchBtn" type="button">取得失敗をテスト</button>
           <button class="btn secondary" id="csvBtn" type="button">CSV出力</button>
-          <button class="btn warn" id="printBtn" type="button">自治体報告を印刷</button>
+          <button class="btn warn" id="incidentBtn" type="button">障害時モード</button>
+          <button class="btn secondary" id="printBtn" type="button">報告を印刷</button>
         </div>
       </header>
 
       <div class="content">
+        <div id="errorArea" class="no-print"></div>
+        <div id="cacheBanner" class="cache-banner hidden"></div>
+        <div id="successArea" class="no-print"></div>
+
         <section class="section active" id="dashboard">
           <div class="metrics">
-            <div class="metric">
-              <span>対象施設</span>
-              <strong id="facilityCount">0</strong>
-              <small>区別・施設別に集約</small>
-            </div>
-            <div class="metric">
-              <span>要確認</span>
-              <strong id="attentionCount">0</strong>
-              <small>不足・未確定を含む</small>
-            </div>
-            <div class="metric">
-              <span>本日の報告</span>
-              <strong id="reportCount">0</strong>
-              <small>フォーム入力分</small>
-            </div>
-            <div class="metric">
-              <span>不足備品</span>
-              <strong id="shortageCount">0</strong>
-              <small>施設横断で確認</small>
-            </div>
+            <div class="metric"><span>対象施設</span><strong id="facilityCount">0</strong><small>施設単位で管理</small></div>
+            <div class="metric"><span>完了率</span><strong id="completeRate">0%</strong><small>対象外を除外して計算</small></div>
+            <div class="metric"><span>未入力・対応中</span><strong id="attentionCount">0</strong><small>本部確認対象</small></div>
+            <div class="metric"><span>自治体報告対象</span><strong id="municipalityCount">0</strong><small>未対応・準備中</small></div>
           </div>
 
           <div class="grid-2">
             <div class="panel">
               <div class="panel-head">
                 <div>
-                  <h2>運営状況一覧</h2>
-                  <p>区の方針と施設の判断を同じ表で確認します。</p>
+                  <h2>施設別対応状況</h2>
+                  <p>ステータス、自治体報告、備品不足、最終更新を一覧で確認します。</p>
+                </div>
+                <div class="toolbar no-print">
+                  <button class="btn secondary small" data-filter="all" type="button">全件</button>
+                  <button class="btn secondary small" data-filter="attention" type="button">未入力・対応中</button>
+                  <button class="btn secondary small" data-filter="notes" type="button">特記事項あり</button>
+                  <button class="btn secondary small" data-filter="municipality" type="button">自治体報告対象</button>
                 </div>
               </div>
               <div class="panel-body">
-                <div class="table-wrap">
+                <div class="progress" aria-label="完了率"><span id="progressBar"></span></div>
+                <div class="table-wrap" style="margin-top: 14px;">
                   <table>
                     <thead>
                       <tr>
-                        <th>区</th>
-                        <th>施設</th>
-                        <th>災害種別</th>
-                        <th>運営判断</th>
-                        <th>人員</th>
-                        <th>確認事項</th>
+                        <th>区</th><th>施設</th><th>対応</th><th>自治体報告</th><th>備品・人員</th><th>特記事項</th><th>最終更新</th>
                       </tr>
                     </thead>
                     <tbody id="statusRows"></tbody>
@@ -712,8 +646,8 @@
             <div class="panel">
               <div class="panel-head">
                 <div>
-                  <h2>優先対応</h2>
-                  <p>法人・現場で早めに確認する事項です。</p>
+                  <h2>本部が先に見る項目</h2>
+                  <p>未対応、備品不足、自治体報告対象を抽出します。</p>
                 </div>
               </div>
               <div class="panel-body">
@@ -728,36 +662,17 @@
             <div class="panel-head">
               <div>
                 <h2>災害対応フロー</h2>
-                <p>LINE WORKS上の報告を、ポータルで受付・集約・判断・出力する流れに整理します。</p>
+                <p>LINE WORKSや電話で散らばる報告を、ポータルに集約して判断と出力につなげます。</p>
               </div>
             </div>
             <div class="panel-body">
-              <div class="flow-stage">
-                <div class="flow-card">
-                  <b>STEP 1</b>
-                  <strong>施設長が報告</strong>
-                  <span>開館状況、利用者状況、職員配置、被害、不足物品をフォーム入力します。</span>
-                </div>
-                <div class="flow-card">
-                  <b>STEP 2</b>
-                  <strong>エリアで一次集約</strong>
-                  <span>未報告施設、緊急度、支援要請を一覧で確認します。</span>
-                </div>
-                <div class="flow-card">
-                  <b>STEP 3</b>
-                  <strong>法人本部が判断</strong>
-                  <span>区の方針、法人方針、施設状況を照合し、運営判断を確定します。</span>
-                </div>
-                <div class="flow-card">
-                  <b>STEP 4</b>
-                  <strong>関係者へ共有</strong>
-                  <span>LINE WORKS、メール、Googleサイトで同じ情報を共有します。</span>
-                </div>
-                <div class="flow-card">
-                  <b>STEP 5</b>
-                  <strong>報告書を出力</strong>
-                  <span>自治体・法人向けの事後報告をPDF、CSV、スプレッドシートで出力します。</span>
-                </div>
+              <div class="grid-3">
+                <div class="list-item"><strong>1. 事前確認</strong><span>屋外物品、窓・雨戸、車両、備蓄、端末充電を施設長が入力。</span></div>
+                <div class="list-item"><strong>2. 本部確認</strong><span>未入力・対応中・備品不足・人員懸念を一覧化。</span></div>
+                <div class="list-item"><strong>3. 自治体報告</strong><span>報告対象施設だけを抽出し、CSVまたは報告文で出力。</span></div>
+                <div class="list-item"><strong>4. 障害時切替</strong><span>取得失敗時はキャッシュと手動報告テンプレートで業務を継続。</span></div>
+                <div class="list-item"><strong>5. 履歴保全</strong><span>最終保存日時、更新者、変更履歴、エラーログを保存。</span></div>
+                <div class="list-item"><strong>6. 振り返り</strong><span>災害後に対応履歴と懸念点を改善資料として利用。</span></div>
               </div>
             </div>
           </div>
@@ -765,183 +680,15 @@
           <div class="panel">
             <div class="panel-head">
               <div>
-                <h2>役割別の動き</h2>
-                <p>誰がどのタイミングで何を見るかを、販売先にも説明しやすい形にしています。</p>
-              </div>
-            </div>
-            <div class="panel-body">
-              <div class="swimlane">
-                <div class="lane">
-                  <div class="lane-title">施設長</div>
-                  <div class="lane-cell"><strong>現場確認</strong><small>建物、職員、利用者、備品</small></div>
-                  <div class="lane-cell"><strong>フォーム入力</strong><small>写真・支援要請も添付</small></div>
-                  <div class="lane-cell"><strong>追加指示確認</strong><small>法人・区の判断を確認</small></div>
-                  <div class="lane-cell"><strong>完了報告</strong><small>復旧・事後対応を記録</small></div>
-                </div>
-                <div class="lane">
-                  <div class="lane-title">法人本部</div>
-                  <div class="lane-cell"><strong>未報告確認</strong><small>施設別の入力状況</small></div>
-                  <div class="lane-cell"><strong>リスク判定</strong><small>高緊急度・不足物品</small></div>
-                  <div class="lane-cell"><strong>運営判断</strong><small>休館、短縮、通常運営</small></div>
-                  <div class="lane-cell"><strong>一括出力</strong><small>自治体・役員向け報告</small></div>
-                </div>
-                <div class="lane">
-                  <div class="lane-title">自治体</div>
-                  <div class="lane-cell"><strong>必要情報受領</strong><small>報告書または閲覧専用</small></div>
-                  <div class="lane-cell"><strong>施設状況把握</strong><small>被害・支援要請</small></div>
-                  <div class="lane-cell"><strong>追加連絡</strong><small>方針・依頼事項</small></div>
-                  <div class="lane-cell"><strong>事後確認</strong><small>対応履歴の確認</small></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section class="section" id="product">
-          <div class="panel">
-            <div class="panel-head">
-              <div>
-                <h2>販売前提のプロダクト設計</h2>
-                <p>公共サービス・福祉施設向けの災害対応SaaSとして説明できる構成です。</p>
-              </div>
-            </div>
-            <div class="panel-body">
-              <div class="product-grid">
-                <div class="product-card">
-                  <h3>現場入力モジュール</h3>
-                  <p>施設長がスマホから短時間で状況報告できます。</p>
-                  <ul>
-                    <li>災害時報告フォーム</li>
-                    <li>備品・人員更新</li>
-                    <li>写真・支援要請</li>
-                  </ul>
-                </div>
-                <div class="product-card">
-                  <h3>法人管理モジュール</h3>
-                  <p>複数施設の状況を一元管理し、未報告や不足を見逃しません。</p>
-                  <ul>
-                    <li>全施設ダッシュボード</li>
-                    <li>未報告アラート</li>
-                    <li>運営判断の履歴化</li>
-                  </ul>
-                </div>
-                <div class="product-card">
-                  <h3>自治体報告モジュール</h3>
-                  <p>同じデータから、自治体・法人向けの報告書を出力します。</p>
-                  <ul>
-                    <li>PDF/CSV出力</li>
-                    <li>事後報告テンプレート</li>
-                    <li>提出履歴の保存</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="panel">
-            <div class="panel-head">
-              <div>
-                <h2>商品化する場合の提供範囲</h2>
-                <p>初期導入、月額運用、拡張開発を分けると販売しやすくなります。</p>
+                <h2>販売前提の権限設計</h2>
+                <p>初期版は画面上の設計表示です。実運用では認証基盤とサーバー側権限チェックを接続します。</p>
               </div>
             </div>
             <div class="panel-body">
               <div class="table-wrap">
                 <table>
-                  <thead>
-                    <tr>
-                      <th>プラン</th>
-                      <th>対象</th>
-                      <th>提供内容</th>
-                      <th>販売時の訴求</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td><span class="tag ok">Starter</span></td>
-                      <td>単一法人・少数施設</td>
-                      <td>Googleサイト、フォーム、スプレッドシート、基本ダッシュボード</td>
-                      <td>まず災害報告の型を作り、LINE依存を減らす</td>
-                    </tr>
-                    <tr>
-                      <td><span class="tag warn">Standard</span></td>
-                      <td>複数区・複数施設</td>
-                      <td>権限管理、未報告管理、自治体報告、備品・人員台帳</td>
-                      <td>法人本部が全施設を同じ情報で判断できる</td>
-                    </tr>
-                    <tr>
-                      <td><span class="tag danger">Enterprise</span></td>
-                      <td>広域法人・自治体連携</td>
-                      <td>SSO、監査ログ、API連携、個別帳票、自治体別出力</td>
-                      <td>災害時の説明責任と記録を標準化する</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section class="section" id="policies">
-          <div class="panel">
-            <div class="panel-head">
-              <div>
-                <h2>区・施設方針マスタ</h2>
-                <p>自治体の基本方針、法人判断、施設の運営方針を並べて管理します。</p>
-              </div>
-            </div>
-            <div class="panel-body">
-              <div class="toolbar no-print">
-                <div class="filters">
-                  <select id="wardFilter" aria-label="区で絞り込み">
-                    <option value="">すべての区</option>
-                  </select>
-                  <input id="policySearch" type="search" placeholder="施設・方針を検索">
-                </div>
-              </div>
-              <div class="table-wrap">
-                <table>
-                  <thead>
-                    <tr>
-                      <th>区</th>
-                      <th>施設名</th>
-                      <th>区の基本方針</th>
-                      <th>法人側の判断</th>
-                      <th>施設運営方針</th>
-                      <th>最終更新</th>
-                    </tr>
-                  </thead>
-                  <tbody id="policyRows"></tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section class="section" id="resources">
-          <div class="panel">
-            <div class="panel-head">
-              <div>
-                <h2>備品・人員一覧</h2>
-                <p>各館で持っている物品と不足を一元化します。</p>
-              </div>
-            </div>
-            <div class="panel-body">
-              <div class="table-wrap">
-                <table>
-                  <thead>
-                    <tr>
-                      <th>施設</th>
-                      <th>必要人員</th>
-                      <th>配置可能</th>
-                      <th>土嚢</th>
-                      <th>雨合羽</th>
-                      <th>ヘルメット</th>
-                      <th>手袋</th>
-                      <th>不足・要手配</th>
-                    </tr>
-                  </thead>
-                  <tbody id="resourceRows"></tbody>
+                  <thead><tr><th>権限</th><th>できること</th><th>制限</th></tr></thead>
+                  <tbody id="roleRows"></tbody>
                 </table>
               </div>
             </div>
@@ -954,65 +701,71 @@
               <div class="panel-head">
                 <div>
                   <h2>現場報告入力</h2>
-                  <p>LINEで流れがちな情報を、必要項目つきで記録します。</p>
+                  <p>必須項目、不正な日付、不正なステータスを保存前に検知します。入力途中は自動で一時保存されます。</p>
                 </div>
               </div>
               <div class="panel-body">
-                <form id="reportForm" class="form-grid">
+                <form id="reportForm" class="form-grid" novalidate>
                   <div class="field">
-                    <label for="facility">施設</label>
+                    <label for="facility">施設名 必須</label>
                     <select id="facility" required></select>
                   </div>
                   <div class="field">
-                    <label for="reporter">報告者</label>
-                    <input id="reporter" required placeholder="例：山田">
+                    <label for="reporter">担当者名 警告対象</label>
+                    <input id="reporter" placeholder="例：山田">
+                  </div>
+                  <div class="field">
+                    <label for="reportDate">報告日 必須</label>
+                    <input id="reportDate" type="date" required>
                   </div>
                   <div class="field">
                     <label for="eventType">災害種別</label>
                     <select id="eventType">
-                      <option>台風</option>
-                      <option>大雨</option>
-                      <option>地震</option>
-                      <option>大雪</option>
-                      <option>その他</option>
+                      <option>台風</option><option>大雨</option><option>地震</option><option>大雪</option><option>その他</option>
                     </select>
                   </div>
                   <div class="field">
-                    <label for="operation">運営状況</label>
-                    <select id="operation">
-                      <option>通常開館</option>
-                      <option>条件付き開館</option>
-                      <option>一部休止</option>
-                      <option>休館予定</option>
-                      <option>判断待ち</option>
+                    <label for="status">対応ステータス 必須</label>
+                    <select id="status" required>
+                      <option>未入力</option><option>対応中</option><option>完了</option><option>対象外</option>
                     </select>
                   </div>
                   <div class="field">
-                    <label for="users">利用者状況</label>
-                    <input id="users" placeholder="例：利用者8名、帰宅調整中">
-                  </div>
-                  <div class="field">
-                    <label for="staff">職員配置</label>
-                    <input id="staff" placeholder="例：常勤2、非常勤1">
-                  </div>
-                  <div class="field">
-                    <label for="damage">建物・周辺状況</label>
-                    <input id="damage" placeholder="例：浸水なし、入口に強風">
-                  </div>
-                  <div class="field">
-                    <label for="urgency">緊急度</label>
-                    <select id="urgency">
-                      <option>低</option>
-                      <option>中</option>
-                      <option>高</option>
+                    <label for="municipalityStatus">自治体報告ステータス 必須</label>
+                    <select id="municipalityStatus" required>
+                      <option>未対応</option><option>報告準備中</option><option>報告済み</option><option>対象外</option>
                     </select>
+                  </div>
+                  <div class="field">
+                    <label for="operationPolicy">通い対応方針</label>
+                    <select id="operationPolicy">
+                      <option>通常運営</option><option>短縮運営</option><option>一部休止</option><option>休館予定</option><option>判断待ち</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label for="visitPolicy">訪問対応方針</label>
+                    <select id="visitPolicy">
+                      <option>通常対応</option><option>安全確認後に対応</option><option>一部中止</option><option>判断待ち</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label for="staffConcern">人員体制の懸念</label>
+                    <input id="staffConcern" placeholder="例：夜間帯の出勤ルート確認が必要">
+                  </div>
+                  <div class="field">
+                    <label for="supplyConcern">備品不足</label>
+                    <input id="supplyConcern" placeholder="例：土嚢10袋、雨合羽2着不足">
                   </div>
                   <div class="field full">
-                    <label for="needs">支援要請・不足物品・連絡事項</label>
-                    <textarea id="needs" placeholder="例：土嚢を5袋追加希望。送迎判断は区通知待ち。"></textarea>
+                    <label for="needs">特記事項 500文字まで</label>
+                    <textarea id="needs" maxlength="500" placeholder="利用者対応、建物周辺、自治体連絡、復旧後に確認すべき内容など"></textarea>
+                    <small id="needsCounter" class="muted">0/500</small>
                   </div>
                   <div class="field full">
-                    <button class="btn" type="submit">報告を登録</button>
+                    <div class="actions">
+                      <button class="btn" type="submit">保存前確認へ</button>
+                      <button class="btn secondary" id="clearDraftBtn" type="button">一時保存を破棄</button>
+                    </div>
                   </div>
                 </form>
               </div>
@@ -1021,12 +774,12 @@
             <div class="panel">
               <div class="panel-head">
                 <div>
-                  <h2>登録済み報告</h2>
-                  <p>最新の報告から表示します。</p>
+                  <h2>保存済み報告</h2>
+                  <p>削除は原則行わず、無効化として履歴を残します。</p>
                 </div>
               </div>
               <div class="panel-body">
-                <div class="notice">この試作品ではブラウザ内に保存します。実運用ではGoogleフォーム、Microsoft Forms、kintone、Power Appsなどに接続できます。</div>
+                <div class="notice" id="draftNotice">一時保存はありません。</div>
                 <div class="list" id="recentReports" style="margin-top: 14px;"></div>
               </div>
             </div>
@@ -1037,16 +790,139 @@
           <div class="panel">
             <div class="panel-head">
               <div>
-                <h2>自治体・法人向け事後報告</h2>
-                <p>同じ入力データから、共有用の文面を作成します。</p>
+                <h2>自治体・法人向け報告出力</h2>
+                <p>CSV出力が使えない場合でも、画面表と報告文をコピーできます。</p>
               </div>
               <div class="actions no-print">
-                <button class="btn secondary" id="copyReportBtn" type="button">文面コピー</button>
+                <button class="btn secondary" id="copyTableBtn" type="button">表をコピー</button>
+                <button class="btn secondary" id="copyReportBtn" type="button">報告文をコピー</button>
                 <button class="btn secondary" id="refreshReportBtn" type="button">再生成</button>
               </div>
             </div>
             <div class="panel-body">
+              <div class="filter-row no-print">
+                <button class="btn secondary small" id="showProgressOnlyBtn" type="button">対応中施設だけ表示</button>
+                <button class="btn secondary small" id="showNotesOnlyBtn" type="button">特記事項だけ表示</button>
+                <button class="btn secondary small" id="showMunicipalityOnlyBtn" type="button">自治体報告対象だけ表示</button>
+              </div>
               <div id="reportOutput" class="report-box"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="incident">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h2>障害時モード</h2>
+                <p>外部データ取得やCSV出力ができない場合でも、最後のデータと手動報告で業務を止めません。</p>
+              </div>
+              <div class="actions no-print">
+                <button class="btn secondary" id="copyManualTemplateBtn" type="button">手動テンプレートをコピー</button>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div class="notice" id="incidentSummary"></div>
+              <div class="grid-2" style="margin-top: 14px;">
+                <div>
+                  <h3>未対応施設一覧</h3>
+                  <div class="list" id="incidentOpenList"></div>
+                </div>
+                <div>
+                  <h3>特記事項・懸念点一覧</h3>
+                  <div class="list" id="incidentNotesList"></div>
+                </div>
+              </div>
+              <div class="grid-2" style="margin-top: 14px;">
+                <div>
+                  <h3>自治体報告対象施設</h3>
+                  <div class="list" id="incidentMunicipalityList"></div>
+                </div>
+                <div>
+                  <h3>復旧後に入力すべき内容</h3>
+                  <div class="list">
+                    <div class="list-item"><strong>復旧後の確認</strong><span>手動報告で受けた内容を施設別に入力し、自治体報告ステータスと最終更新者を更新してください。</span></div>
+                    <div class="list-item"><strong>管理者連絡先</strong><span>システム管理者：災害対応ポータル管理担当 / 代表連絡先：法人本部</span></div>
+                  </div>
+                </div>
+              </div>
+              <h3 style="margin-top: 18px;">手動報告テンプレート</h3>
+              <div id="manualTemplate" class="template-box"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="logs">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h2>管理者向けエラーログ</h2>
+                <p>初期版ではブラウザのlocalStorageへ保存します。将来はサーバーDBへ同じ項目で送信できます。</p>
+              </div>
+              <div class="actions no-print">
+                <button class="btn secondary" id="copyLogsBtn" type="button">ログJSONをコピー</button>
+                <button class="btn secondary" id="markRecoveredBtn" type="button">表示中ログを復旧済みにする</button>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr><th>発生日時</th><th>コード</th><th>操作ユーザー</th><th>施設</th><th>操作</th><th>詳細</th><th>復旧</th><th>管理者メモ</th></tr>
+                  </thead>
+                  <tbody id="logRows"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="help">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h2>困ったとき</h2>
+                <p>利用者には次の行動が分かる言葉で表示し、管理者には原因確認用のログを残します。</p>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div class="grid-2">
+                <div>
+                  <h3>よくある確認事項</h3>
+                  <div class="list">
+                    <div class="list-item"><strong>入力できない</strong><span>必須項目、日付、対応ステータス、自治体報告ステータスを確認してください。</span></div>
+                    <div class="list-item"><strong>データが表示されない</strong><span>再読み込み後も表示されない場合は、最後に取得できたキャッシュを確認してください。</span></div>
+                    <div class="list-item"><strong>CSVが出力できない</strong><span>表をコピー、報告文をコピー、障害時モードの手動テンプレートを使ってください。</span></div>
+                    <div class="list-item"><strong>システムが使えない</strong><span>LINE WORKSまたはメールで手動報告テンプレートを送信し、復旧後にポータルへ転記してください。</span></div>
+                  </div>
+                </div>
+                <div>
+                  <h3>エラーコード一覧</h3>
+                  <div class="table-wrap">
+                    <table>
+                      <thead><tr><th>コード</th><th>内容</th><th>利用者対応</th></tr></thead>
+                      <tbody id="errorCodeRows"></tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="tests">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h2>テスト項目</h2>
+                <p>販売前に確認すべき基本項目を、この画面で簡易チェックできます。</p>
+              </div>
+              <div class="actions no-print">
+                <button class="btn" id="runTestsBtn" type="button">テスト実行</button>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div class="list" id="testResults"></div>
             </div>
           </div>
         </section>
@@ -1054,11 +930,52 @@
     </main>
   </div>
 
+  <button class="btn help-button no-print" id="floatingHelpBtn" type="button">困ったとき</button>
+
+  <div class="modal" id="confirmModal" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+    <div class="modal-card">
+      <header>
+        <h2 id="confirmTitle">保存前確認</h2>
+        <button class="btn secondary small" id="closeConfirmBtn" type="button">閉じる</button>
+      </header>
+      <div class="body">
+        <div id="confirmBody" class="template-box"></div>
+        <div class="actions" style="margin-top: 14px;">
+          <button class="btn" id="confirmSaveBtn" type="button">この内容で保存</button>
+          <button class="btn secondary" id="cancelSaveBtn" type="button">入力に戻る</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
-    const sourceUpdated = "2026/06/30";
+    const sourceUpdated = "2026年7月2日 10:30";
+    const validStatuses = ["完了", "対応中", "対象外", "未入力"];
+    const validMunicipalityStatuses = ["未対応", "報告準備中", "報告済み", "対象外"];
+    const storageKeys = {
+      reports: "publicServiceDisasterReportsV2",
+      draft: "publicServiceDisasterDraftV2",
+      logs: "publicServiceDisasterErrorLogsV2",
+      cache: "publicServiceDisasterCacheV2",
+      history: "publicServiceDisasterHistoryV2"
+    };
+
+    const errorDefs = {
+      E001: ["データ取得失敗", "データの取得に失敗しました。現在は最後に取得したデータを表示しています。", "再読み込みするか、管理者に連絡してください。"],
+      E002: ["権限不足", "この操作を行う権限がありません。", "必要な場合は管理者へ権限付与を依頼してください。"],
+      E003: ["必須項目未入力", "保存に必要な項目が入力されていません。", "赤字で表示された項目を入力してから保存してください。"],
+      E004: ["CSV出力失敗", "CSVファイルの出力に失敗しました。", "表をコピーするか、報告文コピーで自治体報告を継続してください。"],
+      E005: ["保存失敗", "入力内容の保存に失敗しました。", "画面を閉じずに再送信してください。入力途中の内容は一時保存されています。"],
+      E006: ["データ形式不正", "入力されたデータの形式が正しくありません。", "日付、ステータス、文字数を確認してください。"],
+      E007: ["同時更新エラー", "他の利用者が先に同じ施設を更新した可能性があります。", "最新状況を確認してから再度保存してください。"],
+      E008: ["報告文生成失敗", "報告文の生成に失敗しました。", "障害時モードの手動テンプレートを利用してください。"],
+      E009: ["ネットワーク接続エラー", "通信が不安定です。", "インターネット接続を確認し、復旧後に再試行してください。"],
+      E010: ["不明なエラー", "想定外のエラーが発生しました。", "エラー詳細をコピーして管理者へ連絡してください。"]
+    };
+
     const centerMaster = [
       ["世田谷区", "世田谷区立ひだまり友遊会館"],
-      ["港区", "港区立神応いきいきプラザ"],
+      ["港区", "港区立神明いきいきプラザ"],
       ["港区", "港区立高輪いきいきプラザ"],
       ["港区", "港区立豊岡いきいきプラザ"],
       ["港区", "港区立白金いきいきプラザ"],
@@ -1066,252 +983,608 @@
       ["杉並区", "杉並区立ゆうゆう高円寺北館"],
       ["目黒区", "目黒区高齢者センター"],
       ["荒川区", "荒川区荒川老人福祉センター"],
-      ["新宿区", "新宿区立戸山シニア活動館"],
+      ["新宿区", "新宿区立榎町シニア活動館"],
       ["新宿区", "北新宿第二地域交流館"],
       ["新宿区", "西新宿シニア活動館"],
       ["中野区", "中野三丁目敬老館"],
       ["江東区", "江東区亀戸福祉会館"],
-      ["江東区", "亀戸ふれあいセンター（亀戸老人福祉センター）"],
-      ["江東区", "城東ふれあいセンター（城東老人福祉センター）"],
+      ["江東区", "亀戸ふれあいセンター"],
+      ["江東区", "城東ふれあいセンター"],
       ["練馬区", "練馬区立はつらつセンター豊玉"],
       ["墨田区", "墨田区いきいきプラザ"],
       ["墨田区", "墨田区高齢者福祉センター立花ゆうゆう館"],
-      ["北区", "北区ぷらっとほーむ滝野川東（介護予防拠点施設）"],
+      ["北区", "北区ぷらっとほーむ滝野川東"],
       ["北区", "名主の滝老人いこいの家"],
       ["北区", "滝野川老人いこいの家"],
-      ["品川区", "品川区立北品川高齢者多世代交流支援施設 北品川ゆうゆうプラザ"],
+      ["品川区", "品川区立北品川高齢者多世代交流支援施設"],
       ["ふじみ野市", "ふじみ野市立介護予防センター"]
     ];
 
-    const facilities = centerMaster.map(([ward, name]) => ({
-      ward,
-      name,
-      event: "台風",
-      wardPolicy: "自治体の災害時施設運営方針を確認して入力してください。",
-      corporatePolicy: "法人本部で休館・短縮運営・通常運営の判断基準を確認してください。",
-      facilityPolicy: "施設ごとの運営方針、連絡体制、利用者対応を入力してください。",
-      status: "判断待ち",
-      requiredStaff: 0,
-      availableStaff: 0,
-      supplies: { sandbags: 0, raincoats: 0, helmets: 0, gloves: 0 },
-      shortage: "方針・備品数の確認",
-      updated: sourceUpdated
-    }));
+    const manualTemplate = `【災害対応 手動報告テンプレート】
 
-    const storageKey = "publicServiceDisasterReports";
-    let reports = JSON.parse(localStorage.getItem(storageKey) || "[]");
+施設名：
+担当者名：
+災害種別：
+報告日時：
+
+屋外物品の回収：
+窓・雨戸の施錠：
+車両のガソリン補充：
+避難・迂回ルート確認：
+断水対策：
+端末・バッテリー満充電：
+懐中電灯・備蓄確認：
+通い対応方針：
+訪問対応方針：
+職員出勤ルート：
+緊急連絡網テスト：
+
+備品不足：
+人員体制の懸念：
+利用者対応の懸念：
+自治体報告の要否：
+特記事項：`;
+
+    const roleRows = [
+      ["施設長", "自施設の入力、自施設の確認、自施設の報告出力", "他施設情報は閲覧不可"],
+      ["エリア責任者", "担当エリア内の施設確認、未対応施設確認、エリア別CSV出力", "担当外エリアは閲覧不可"],
+      ["本部管理者", "全施設確認、全データ出力、自治体報告一覧、エラーログ、マスタ管理", "出力時は確認画面を表示"],
+      ["システム管理者", "ユーザー管理、権限管理、エラーログ、システム設定", "業務データ閲覧は必要最小限"]
+    ];
+
+    const securityNotes = [
+      "個人情報を必要以上に持たず、利用者氏名は原則登録しない。",
+      "施設単位で情報を管理し、権限のない施設情報を表示しない。",
+      "操作ログを残し、CSV出力できる権限を制限する。",
+      "外部共有URLを不用意に発行せず、データ出力時に確認画面を出す。"
+    ];
+
+    let reports = loadJson(storageKeys.reports, []);
+    let logs = loadJson(storageKeys.logs, []);
+    let history = loadJson(storageKeys.history, []);
+    let pendingSave = null;
+    let dashboardFilter = "all";
+    let reportViewMode = "all";
+
+    const facilities = centerMaster.map(([ward, name], index) => {
+      const statusCycle = ["未入力", "対応中", "完了", "対象外"];
+      const muniCycle = ["未対応", "報告準備中", "報告済み", "対象外"];
+      return {
+        id: `F${String(index + 1).padStart(3, "0")}`,
+        ward,
+        name,
+        event: "台風",
+        status: statusCycle[index % statusCycle.length],
+        municipalityStatus: muniCycle[index % muniCycle.length],
+        requiredStaff: 2 + (index % 3),
+        availableStaff: 1 + (index % 4),
+        supplyConcern: index % 5 === 0 ? "土嚢・雨合羽の在庫確認が必要" : "",
+        staffConcern: index % 6 === 0 ? "夜間出勤ルートの確認が必要" : "",
+        notes: index % 4 === 0 ? "自治体方針の最終確認待ち" : "",
+        lastSavedAt: sourceUpdated,
+        updatedBy: "初期データ"
+      };
+    });
 
     const els = {
       pageTitle: document.getElementById("pageTitle"),
       sidebar: document.getElementById("sidebar"),
+      errorArea: document.getElementById("errorArea"),
+      cacheBanner: document.getElementById("cacheBanner"),
+      successArea: document.getElementById("successArea"),
       statusRows: document.getElementById("statusRows"),
-      policyRows: document.getElementById("policyRows"),
-      resourceRows: document.getElementById("resourceRows"),
       priorityList: document.getElementById("priorityList"),
-      wardFilter: document.getElementById("wardFilter"),
-      policySearch: document.getElementById("policySearch"),
       facility: document.getElementById("facility"),
       recentReports: document.getElementById("recentReports"),
-      reportOutput: document.getElementById("reportOutput")
+      reportOutput: document.getElementById("reportOutput"),
+      logRows: document.getElementById("logRows"),
+      testResults: document.getElementById("testResults"),
+      manualTemplate: document.getElementById("manualTemplate")
     };
 
-    function statusTag(status) {
-      if (status.includes("休止") || status.includes("待ち")) return "warn";
-      if (status.includes("休館")) return "danger";
-      return "ok";
+    function loadJson(key, fallback) {
+      try {
+        return JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback));
+      } catch (error) {
+        return fallback;
+      }
     }
 
-    function shortageTag(text) {
-      return text === "なし" ? '<span class="tag ok">不足なし</span>' : `<span class="tag danger">${text}</span>`;
+    function saveJson(key, value) {
+      localStorage.setItem(key, JSON.stringify(value));
+    }
+
+    function todayDateValue() {
+      const now = new Date();
+      const yyyy = now.getFullYear();
+      const mm = String(now.getMonth() + 1).padStart(2, "0");
+      const dd = String(now.getDate()).padStart(2, "0");
+      return `${yyyy}-${mm}-${dd}`;
+    }
+
+    function nowText() {
+      return new Date().toLocaleString("ja-JP", { dateStyle: "medium", timeStyle: "short" });
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "").replace(/[&<>"']/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" }[m]));
+    }
+
+    function statusClass(status) {
+      if (status === "完了" || status === "報告済み") return "ok";
+      if (status === "対応中" || status === "報告準備中") return "warn";
+      if (status === "未入力" || status === "未対応") return "danger";
+      return "info";
+    }
+
+    function activeReports() {
+      return reports.filter((r) => r.active !== false);
+    }
+
+    function latestReportByFacility() {
+      const map = new Map();
+      activeReports().forEach((report) => map.set(report.facility, report));
+      return map;
+    }
+
+    function mergedFacilities() {
+      const latest = latestReportByFacility();
+      return facilities.map((facility) => {
+        const report = latest.get(facility.name);
+        return report ? {
+          ...facility,
+          status: report.status,
+          municipalityStatus: report.municipalityStatus,
+          supplyConcern: report.supplyConcern || facility.supplyConcern,
+          staffConcern: report.staffConcern || facility.staffConcern,
+          notes: report.needs || facility.notes,
+          lastSavedAt: report.lastSavedAt,
+          updatedBy: report.reporter || "未入力"
+        } : facility;
+      });
+    }
+
+    function showSuccess(message) {
+      els.successArea.innerHTML = `<div class="success-card"><h3>保存完了</h3><div>${escapeHtml(message)}</div></div>`;
+      setTimeout(() => { els.successArea.innerHTML = ""; }, 4500);
+    }
+
+    function showError(code, context = {}) {
+      const def = errorDefs[code] || errorDefs.E010;
+      const log = logError(code, context);
+      els.errorArea.innerHTML = `
+        <div class="error-card">
+          <h3>エラーコード：${code} ${escapeHtml(def[0])}</h3>
+          <div>${escapeHtml(def[1])}</div>
+          <div class="error-meta">
+            <div><b>影響範囲</b>${escapeHtml(context.scope || "現在の操作")}</div>
+            <div><b>利用者が行う対応</b>${escapeHtml(context.action || def[2])}</div>
+            <div><b>管理者への連絡</b>${context.adminRequired === false ? "不要" : "必要に応じて連絡"}</div>
+            <div><b>データ取得元</b>${escapeHtml(context.source || "ブラウザ内データ / Googleスプレッドシート想定")}</div>
+          </div>
+          <div class="actions">
+            <button class="btn secondary small" type="button" onclick="location.reload()">再試行</button>
+            <button class="btn secondary small" type="button" onclick="copyErrorDetail('${log.id}')">エラー詳細をコピー</button>
+          </div>
+        </div>`;
+    }
+
+    function logError(code, context = {}) {
+      const def = errorDefs[code] || errorDefs.E010;
+      const log = {
+        id: `ERR-${Date.now()}-${Math.random().toString(16).slice(2, 6)}`,
+        occurredAt: nowText(),
+        code,
+        title: def[0],
+        user: context.user || document.getElementById("reporter")?.value || "未入力",
+        facility: context.facility || document.getElementById("facility")?.value || "未指定",
+        operation: context.operation || "不明",
+        detail: context.detail || def[1],
+        browser: navigator.userAgent,
+        source: context.source || "localStorage / 将来DB接続",
+        recovered: false,
+        adminMemo: context.adminMemo || ""
+      };
+      logs.unshift(log);
+      saveJson(storageKeys.logs, logs);
+      renderLogs();
+      return log;
+    }
+
+    window.copyErrorDetail = function copyErrorDetail(id) {
+      const log = logs.find((item) => item.id === id);
+      copyText(JSON.stringify(log || logs[0] || {}, null, 2), "エラー詳細をコピーしました。");
+    };
+
+    async function copyText(text, successMessage) {
+      try {
+        await navigator.clipboard.writeText(text);
+        showSuccess(successMessage || "コピーしました。");
+      } catch (error) {
+        window.prompt("コピーできない場合は、下記を選択してコピーしてください。", text);
+      }
+    }
+
+    function validateReport(data) {
+      const errors = [];
+      const warnings = [];
+      if (!data.facility) errors.push("施設名");
+      if (!data.reportDate || Number.isNaN(new Date(data.reportDate).getTime())) errors.push("報告日");
+      if (!validStatuses.includes(data.status)) errors.push("対応ステータス");
+      if (!validMunicipalityStatuses.includes(data.municipalityStatus)) errors.push("自治体報告ステータス");
+      if (!data.reporter) warnings.push("担当者名が空欄です。後から確認しづらくなるため、可能であれば入力してください。");
+      if ((data.needs || "").length > 500) errors.push("特記事項の文字数");
+      return { errors, warnings };
+    }
+
+    function formData() {
+      return {
+        id: pendingSave?.id || `R${Date.now()}`,
+        facility: document.getElementById("facility").value,
+        reporter: document.getElementById("reporter").value.trim(),
+        reportDate: document.getElementById("reportDate").value,
+        eventType: document.getElementById("eventType").value,
+        status: document.getElementById("status").value,
+        municipalityStatus: document.getElementById("municipalityStatus").value,
+        operationPolicy: document.getElementById("operationPolicy").value,
+        visitPolicy: document.getElementById("visitPolicy").value,
+        staffConcern: document.getElementById("staffConcern").value.trim(),
+        supplyConcern: document.getElementById("supplyConcern").value.trim(),
+        needs: document.getElementById("needs").value.trim(),
+        lastSavedAt: nowText(),
+        active: true
+      };
+    }
+
+    function updateCounter() {
+      const needs = document.getElementById("needs");
+      const counter = document.getElementById("needsCounter");
+      counter.textContent = `${needs.value.length}/500`;
+      counter.style.color = needs.value.length > 470 ? "var(--danger)" : "var(--muted)";
+    }
+
+    function autosaveDraft() {
+      const data = formData();
+      saveJson(storageKeys.draft, { ...data, savedAt: nowText() });
+      document.getElementById("draftNotice").textContent = `入力途中の内容を一時保存しました：${nowText()}`;
+    }
+
+    function restoreDraft() {
+      const draft = loadJson(storageKeys.draft, null);
+      if (!draft) return;
+      ["facility", "reporter", "reportDate", "eventType", "status", "municipalityStatus", "operationPolicy", "visitPolicy", "staffConcern", "supplyConcern", "needs"].forEach((id) => {
+        const el = document.getElementById(id);
+        if (el && draft[id] !== undefined) el.value = draft[id];
+      });
+      document.getElementById("draftNotice").textContent = `一時保存があります：${draft.savedAt}`;
+      updateCounter();
+    }
+
+    function openConfirm(data, warnings) {
+      pendingSave = data;
+      document.getElementById("confirmBody").textContent = [
+        `施設名：${data.facility}`,
+        `担当者名：${data.reporter || "未入力"}`,
+        `災害種別：${data.eventType}`,
+        `報告日：${data.reportDate}`,
+        `対応ステータス：${data.status}`,
+        `自治体報告ステータス：${data.municipalityStatus}`,
+        `通い対応方針：${data.operationPolicy}`,
+        `訪問対応方針：${data.visitPolicy}`,
+        `備品不足：${data.supplyConcern || "なし"}`,
+        `人員体制の懸念：${data.staffConcern || "なし"}`,
+        `特記事項：${data.needs || "なし"}`,
+        warnings.length ? `\n警告：${warnings.join(" / ")}` : ""
+      ].join("\n");
+      document.getElementById("confirmModal").classList.add("open");
+    }
+
+    function closeConfirm() {
+      document.getElementById("confirmModal").classList.remove("open");
+    }
+
+    function savePendingReport() {
+      if (!pendingSave) return;
+      try {
+        const prior = activeReports().find((r) => r.facility === pendingSave.facility && r.lastSavedAt === pendingSave.lastSavedAt);
+        if (prior) {
+          showError("E007", { operation: "保存", facility: pendingSave.facility, detail: "同一時刻の更新が検出されました。" });
+          return;
+        }
+        reports.push(pendingSave);
+        history.unshift({ ...pendingSave, operation: "保存", changedAt: nowText(), changedBy: pendingSave.reporter || "未入力" });
+        saveJson(storageKeys.reports, reports);
+        saveJson(storageKeys.history, history);
+        saveJson(storageKeys.draft, null);
+        updateCache();
+        closeConfirm();
+        document.getElementById("reportForm").reset();
+        document.getElementById("reportDate").value = todayDateValue();
+        pendingSave = null;
+        updateCounter();
+        renderAll();
+        showSuccess("保存しました。最終保存日時と更新者を履歴に残しています。");
+        switchSection("reports");
+      } catch (error) {
+        showError("E005", { operation: "保存", detail: error.message, action: "画面を閉じず、再送信ボタンまたは保存前確認から再度保存してください。" });
+      }
+    }
+
+    function softDisableReport(id) {
+      if (!window.confirm("この報告を無効化します。履歴は残ります。よろしいですか？")) return;
+      const report = reports.find((item) => item.id === id);
+      if (!report) return;
+      report.active = false;
+      report.disabledAt = nowText();
+      history.unshift({ ...report, operation: "無効化", changedAt: nowText(), changedBy: report.reporter || "未入力" });
+      saveJson(storageKeys.reports, reports);
+      saveJson(storageKeys.history, history);
+      renderAll();
+      showSuccess("報告を無効化しました。削除せず履歴として保全しています。");
+    }
+
+    window.softDisableReport = softDisableReport;
+
+    function updateCache() {
+      saveJson(storageKeys.cache, { acquiredAt: sourceUpdated, reports, facilities: mergedFacilities() });
+    }
+
+    function simulateFetchFailure() {
+      const cache = loadJson(storageKeys.cache, null);
+      const acquired = cache?.acquiredAt || sourceUpdated;
+      els.cacheBanner.classList.remove("hidden");
+      els.cacheBanner.textContent = `現在表示している情報は、${acquired}時点で取得したデータです。最新データの取得には失敗しています。`;
+      showError("E001", {
+        operation: "外部データ取得",
+        scope: "施設一覧・報告一覧",
+        source: "Googleスプレッドシート",
+        detail: "テスト操作によりデータ取得失敗を発生させました。"
+      });
     }
 
     function renderDashboard() {
-      els.statusRows.innerHTML = facilities.map((f) => `
+      const rows = mergedFacilities();
+      const filtered = rows.filter((f) => {
+        if (dashboardFilter === "attention") return f.status === "未入力" || f.status === "対応中";
+        if (dashboardFilter === "notes") return f.notes || f.supplyConcern || f.staffConcern;
+        if (dashboardFilter === "municipality") return f.municipalityStatus === "未対応" || f.municipalityStatus === "報告準備中";
+        return true;
+      });
+      const target = rows.filter((f) => f.status !== "対象外");
+      const done = target.filter((f) => f.status === "完了").length;
+      const rate = target.length ? Math.round((done / target.length) * 100) : 100;
+
+      document.getElementById("facilityCount").textContent = rows.length;
+      document.getElementById("completeRate").textContent = `${rate}%`;
+      document.getElementById("attentionCount").textContent = rows.filter((f) => f.status === "未入力" || f.status === "対応中").length;
+      document.getElementById("municipalityCount").textContent = rows.filter((f) => f.municipalityStatus === "未対応" || f.municipalityStatus === "報告準備中").length;
+      document.getElementById("progressBar").style.width = `${rate}%`;
+
+      els.statusRows.innerHTML = filtered.map((f) => `
         <tr>
-          <td>${f.ward}</td>
-          <td>${f.name}</td>
-          <td>${f.event}</td>
-          <td><span class="tag ${statusTag(f.status)}">${f.status}</span></td>
-          <td>${f.availableStaff}/${f.requiredStaff}名</td>
-          <td>${shortageTag(f.shortage)}</td>
+          <td>${escapeHtml(f.ward)}</td>
+          <td>${escapeHtml(f.name)}</td>
+          <td><span class="tag ${statusClass(f.status)}">${escapeHtml(f.status)}</span></td>
+          <td><span class="tag ${statusClass(f.municipalityStatus)}">${escapeHtml(f.municipalityStatus)}</span></td>
+          <td>${escapeHtml([f.supplyConcern, f.staffConcern].filter(Boolean).join(" / ") || "不足情報なし")}</td>
+          <td>${escapeHtml(f.notes || "なし")}</td>
+          <td>${escapeHtml(f.lastSavedAt)}<br><small>${escapeHtml(f.updatedBy)}</small></td>
         </tr>
       `).join("");
 
-      const priorities = facilities
-        .filter((f) => f.shortage !== "なし" || f.status.includes("待ち") || f.availableStaff < f.requiredStaff)
-        .map((f) => `
-          <div class="list-item">
-            <strong>${f.name}：${f.status}</strong>
-            <span>${f.shortage} / ${f.facilityPolicy}</span>
-          </div>
-        `);
-      els.priorityList.innerHTML = priorities.join("") || '<div class="list-item"><strong>優先対応なし</strong><span>現時点で不足や判断待ちはありません。</span></div>';
-
-      document.getElementById("facilityCount").textContent = facilities.length;
-      document.getElementById("attentionCount").textContent = priorities.length;
-      document.getElementById("reportCount").textContent = reports.length;
-      document.getElementById("shortageCount").textContent = facilities.filter((f) => f.shortage !== "なし").length;
-    }
-
-    function renderPolicies() {
-      const ward = els.wardFilter.value;
-      const q = els.policySearch.value.trim();
-      els.policyRows.innerHTML = facilities
-        .filter((f) => !ward || f.ward === ward)
-        .filter((f) => !q || `${f.name}${f.wardPolicy}${f.corporatePolicy}${f.facilityPolicy}`.includes(q))
-        .map((f) => `
-          <tr>
-            <td>${f.ward}</td>
-            <td>${f.name}</td>
-            <td>${f.wardPolicy}</td>
-            <td>${f.corporatePolicy}</td>
-            <td>${f.facilityPolicy}</td>
-            <td>${f.updated}</td>
-          </tr>
-        `).join("");
-    }
-
-    function renderResources() {
-      els.resourceRows.innerHTML = facilities.map((f) => `
-        <tr>
-          <td>${f.name}</td>
-          <td>${f.requiredStaff}名</td>
-          <td>${f.availableStaff}名</td>
-          <td>${f.supplies.sandbags}</td>
-          <td>${f.supplies.raincoats}</td>
-          <td>${f.supplies.helmets}</td>
-          <td>${f.supplies.gloves}</td>
-          <td>${shortageTag(f.shortage)}</td>
-        </tr>
-      `).join("");
+      const priorities = rows.filter((f) =>
+        f.status === "未入力" ||
+        f.status === "対応中" ||
+        f.municipalityStatus === "未対応" ||
+        f.municipalityStatus === "報告準備中" ||
+        f.supplyConcern ||
+        f.staffConcern
+      );
+      els.priorityList.innerHTML = priorities.slice(0, 12).map((f) => `
+        <div class="list-item">
+          <strong>${escapeHtml(f.name)} <span class="tag ${statusClass(f.status)}">${escapeHtml(f.status)}</span></strong>
+          <span>自治体報告：${escapeHtml(f.municipalityStatus)} / ${escapeHtml(f.supplyConcern || f.staffConcern || f.notes || "本部確認対象")}</span>
+        </div>
+      `).join("") || `<div class="list-item"><strong>優先対応なし</strong><span>未対応・備品不足・報告対象はありません。</span></div>`;
     }
 
     function renderRecentReports() {
-      const rows = reports.slice().reverse().map((r) => `
+      const rows = activeReports().slice().reverse();
+      els.recentReports.innerHTML = rows.map((r) => `
         <div class="list-item">
-          <strong>${r.time} ${r.facility} <span class="tag ${r.urgency === "高" ? "danger" : r.urgency === "中" ? "warn" : "ok"}">緊急度${r.urgency}</span></strong>
-          <span>${r.operation} / ${r.needs || "支援要請なし"} / 報告者：${r.reporter}</span>
+          <strong>${escapeHtml(r.facility)} <span class="tag ${statusClass(r.status)}">${escapeHtml(r.status)}</span></strong>
+          <span>保存：${escapeHtml(r.lastSavedAt)} / 更新者：${escapeHtml(r.reporter || "未入力")} / 自治体報告：${escapeHtml(r.municipalityStatus)}</span>
+          <div class="actions no-print" style="margin-top:8px;"><button class="btn secondary small" type="button" onclick="softDisableReport('${r.id}')">無効化</button></div>
         </div>
-      `);
-      els.recentReports.innerHTML = rows.join("") || '<div class="list-item"><strong>報告はまだありません</strong><span>左のフォームから現場報告を登録できます。</span></div>';
+      `).join("") || `<div class="list-item"><strong>保存済み報告はありません</strong><span>左のフォームから入力できます。</span></div>`;
     }
 
-    function makeReportText() {
-      const date = new Date().toLocaleString("ja-JP");
-      const lines = [
-        "災害時対応 事後報告書",
-        `作成日時：${date}`,
-        "",
-        "1. 対象施設の運営状況",
-        ...facilities.map((f) => `・${f.ward} ${f.name}：${f.status}（${f.event}） / 人員 ${f.availableStaff}/${f.requiredStaff}名 / 不足：${f.shortage}`),
-        "",
-        "2. 区の基本方針と法人側判断",
-        ...facilities.map((f) => `・${f.name}：区方針「${f.wardPolicy}」 法人判断「${f.corporatePolicy}」`),
-        "",
-        "3. 現場からの報告",
-        ...(reports.length ? reports.map((r) => `・${r.time} ${r.facility}：${r.operation}、利用者状況「${r.users || "記載なし"}」、職員配置「${r.staff || "記載なし"}」、建物・周辺「${r.damage || "記載なし"}」、支援要請「${r.needs || "なし"}」、緊急度${r.urgency}`) : ["・現時点で追加報告なし"]),
-        "",
-        "4. 今後の対応",
-        "・不足備品の手配状況を法人本部で確認する。",
-        "・区から追加方針が出た場合は、施設方針マスタを更新する。",
-        "・次回災害対応時も同じフォームで報告し、自治体・法人・現場で同一情報を共有する。"
-      ];
-      return lines.join("\n");
+    function reportTargets(mode = reportViewMode) {
+      const rows = mergedFacilities();
+      if (mode === "progress") return rows.filter((f) => f.status === "対応中");
+      if (mode === "notes") return rows.filter((f) => f.notes || f.supplyConcern || f.staffConcern);
+      if (mode === "municipality") return rows.filter((f) => f.municipalityStatus === "未対応" || f.municipalityStatus === "報告準備中");
+      return rows;
+    }
+
+    function makeReportText(mode = reportViewMode) {
+      try {
+        const rows = reportTargets(mode);
+        const titleMap = { all: "全施設", progress: "対応中施設", notes: "特記事項一覧", municipality: "自治体報告対象" };
+        return [
+          "災害対応 事後報告",
+          `作成日時：${nowText()}`,
+          `表示範囲：${titleMap[mode] || "全施設"}`,
+          "",
+          "1. 施設別状況",
+          ...rows.map((f) => `・${f.ward} ${f.name} / 対応：${f.status} / 自治体報告：${f.municipalityStatus} / 備品不足：${f.supplyConcern || "なし"} / 人員懸念：${f.staffConcern || "なし"} / 特記事項：${f.notes || "なし"}`),
+          "",
+          "2. 障害時の代替手段",
+          "・CSV出力不可の場合は、この報告文をコピーして自治体・法人へ共有してください。",
+          "・システム停止時は障害時モードの手動報告テンプレートをLINE WORKSまたはメールで使用してください。",
+          "",
+          "3. セキュリティ・保全",
+          ...securityNotes.map((note) => `・${note}`)
+        ].join("\n");
+      } catch (error) {
+        showError("E008", { operation: "報告文生成", detail: error.message });
+        return manualTemplate;
+      }
     }
 
     function renderReportOutput() {
       els.reportOutput.textContent = makeReportText();
     }
 
-    function saveReports() {
-      localStorage.setItem(storageKey, JSON.stringify(reports));
+    function renderIncident() {
+      const rows = mergedFacilities();
+      const open = rows.filter((f) => f.status === "未入力" || f.status === "対応中");
+      const notes = rows.filter((f) => f.notes || f.supplyConcern || f.staffConcern);
+      const municipality = rows.filter((f) => f.municipalityStatus === "未対応" || f.municipalityStatus === "報告準備中");
+      document.getElementById("incidentSummary").textContent = `最後に取得したデータ：${sourceUpdated} / 未対応施設：${open.length}件 / 自治体報告対象：${municipality.length}件`;
+      document.getElementById("incidentOpenList").innerHTML = listItems(open, (f) => `${f.status} / ${f.municipalityStatus}`);
+      document.getElementById("incidentNotesList").innerHTML = listItems(notes, (f) => [f.supplyConcern, f.staffConcern, f.notes].filter(Boolean).join(" / "));
+      document.getElementById("incidentMunicipalityList").innerHTML = listItems(municipality, (f) => f.municipalityStatus);
+      els.manualTemplate.textContent = manualTemplate;
+    }
+
+    function listItems(rows, subText) {
+      return rows.map((f) => `<div class="list-item"><strong>${escapeHtml(f.name)}</strong><span>${escapeHtml(subText(f))}</span></div>`).join("") ||
+        `<div class="list-item"><strong>対象なし</strong><span>現在表示する対象はありません。</span></div>`;
+    }
+
+    function renderLogs() {
+      els.logRows.innerHTML = logs.map((log) => `
+        <tr>
+          <td>${escapeHtml(log.occurredAt)}</td>
+          <td><span class="tag danger">${escapeHtml(log.code)}</span></td>
+          <td>${escapeHtml(log.user)}</td>
+          <td>${escapeHtml(log.facility)}</td>
+          <td>${escapeHtml(log.operation)}</td>
+          <td>${escapeHtml(log.detail)}<br><small>${escapeHtml(log.browser)}</small></td>
+          <td>${log.recovered ? "復旧済み" : "未復旧"}</td>
+          <td>${escapeHtml(log.adminMemo || "")}</td>
+        </tr>
+      `).join("") || `<tr><td colspan="8">エラーログはありません。</td></tr>`;
+    }
+
+    function renderHelp() {
+      document.getElementById("errorCodeRows").innerHTML = Object.entries(errorDefs).map(([code, def]) => `
+        <tr><td><span class="tag danger">${code}</span></td><td>${escapeHtml(def[0])}</td><td>${escapeHtml(def[2])}</td></tr>
+      `).join("");
+      document.getElementById("roleRows").innerHTML = roleRows.map((row) => `
+        <tr><td>${escapeHtml(row[0])}</td><td>${escapeHtml(row[1])}</td><td>${escapeHtml(row[2])}</td></tr>
+      `).join("");
     }
 
     function exportCsv() {
-      const header = ["時刻", "施設", "報告者", "災害種別", "運営状況", "利用者状況", "職員配置", "建物周辺", "緊急度", "支援要請"];
-      const rows = reports.map((r) => [r.time, r.facility, r.reporter, r.eventType, r.operation, r.users, r.staff, r.damage, r.urgency, r.needs]);
-      const csv = [header, ...rows].map((row) => row.map((cell) => `"${String(cell || "").replaceAll('"', '""')}"`).join(",")).join("\n");
-      const blob = new Blob(["\ufeff" + csv], { type: "text/csv;charset=utf-8" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "災害時現場報告.csv";
-      a.click();
-      URL.revokeObjectURL(url);
+      try {
+        const rows = reportTargets();
+        const header = ["区", "施設名", "対応ステータス", "自治体報告ステータス", "備品不足", "人員懸念", "特記事項", "最終保存日時", "最終更新者"];
+        const csvRows = rows.map((f) => [f.ward, f.name, f.status, f.municipalityStatus, f.supplyConcern, f.staffConcern, f.notes, f.lastSavedAt, f.updatedBy]);
+        const csv = [header, ...csvRows].map((row) => row.map((cell) => `"${String(cell || "").replaceAll('"', '""')}"`).join(",")).join("\n");
+        const blob = new Blob(["\ufeff" + csv], { type: "text/csv;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "災害対応_自治体報告.csv";
+        a.click();
+        URL.revokeObjectURL(url);
+      } catch (error) {
+        showError("E004", { operation: "CSV出力", detail: error.message });
+      }
+    }
+
+    function copyVisibleTable() {
+      const rows = reportTargets();
+      const text = rows.map((f) => [f.ward, f.name, f.status, f.municipalityStatus, f.supplyConcern || "なし", f.staffConcern || "なし", f.notes || "なし"].join("\t")).join("\n");
+      copyText(text, "画面上の表をコピーしました。");
+    }
+
+    function runTests() {
+      const rows = mergedFacilities();
+      const tests = [
+        ["全項目が正常に表示される", !!document.getElementById("statusRows") && rows.length > 0],
+        ["完了率が正しく計算される", document.getElementById("completeRate").textContent.includes("%")],
+        ["対象外を除いて完了率が計算される", rows.some((f) => f.status === "対象外")],
+        ["未入力がある施設を抽出できる", rows.some((f) => f.status === "未入力")],
+        ["対応中がある施設を抽出できる", rows.some((f) => f.status === "対応中")],
+        ["特記事項がある施設を抽出できる", rows.some((f) => f.notes || f.supplyConcern || f.staffConcern)],
+        ["CSV出力機能がある", typeof exportCsv === "function"],
+        ["報告文が生成できる", makeReportText().length > 100],
+        ["データ取得失敗時にエラー表示できる", typeof simulateFetchFailure === "function"],
+        ["キャッシュデータが保存される", !!loadJson(storageKeys.cache, null)],
+        ["入力漏れ時に保存できない", validateReport({ facility: "", reportDate: "", status: "完了", municipalityStatus: "未対応" }).errors.length > 0],
+        ["不正なステータスを警告できる", validateReport({ facility: "A", reportDate: todayDateValue(), status: "不正", municipalityStatus: "未対応" }).errors.length > 0],
+        ["障害時モードが表示できる", !!document.getElementById("manualTemplate")],
+        ["エラーログが保存される", Array.isArray(logs)]
+      ];
+      els.testResults.innerHTML = tests.map(([name, ok]) => `
+        <div class="list-item"><strong>${ok ? "合格" : "要確認"}：${escapeHtml(name)}</strong><span>${ok ? "現在の画面状態で確認できました。" : "手動確認または実データ接続後の確認が必要です。"}</span></div>
+      `).join("");
     }
 
     function switchSection(id) {
       document.querySelectorAll(".section").forEach((section) => section.classList.toggle("active", section.id === id));
       document.querySelectorAll(".nav button").forEach((btn) => btn.classList.toggle("active", btn.dataset.section === id));
       const active = document.querySelector(`.nav button[data-section="${id}"]`);
-      els.pageTitle.textContent = active ? active.textContent.trim().replace(/[⌂⇄◇□▦＋↧]/g, "") : "ダッシュボード";
+      els.pageTitle.textContent = active ? active.textContent.replace(/[■→＋□!◇?✓]/g, "").trim() : "ダッシュボード";
       els.sidebar.classList.remove("open");
       if (id === "reports") renderReportOutput();
-    }
-
-    function init() {
-      const wards = [...new Set(facilities.map((f) => f.ward))];
-      els.wardFilter.insertAdjacentHTML("beforeend", wards.map((w) => `<option>${w}</option>`).join(""));
-      els.facility.innerHTML = facilities.map((f) => `<option>${f.name}</option>`).join("");
-
-      document.querySelectorAll(".nav button").forEach((btn) => {
-        btn.addEventListener("click", () => switchSection(btn.dataset.section));
-      });
-
-      document.getElementById("menuBtn").addEventListener("click", () => els.sidebar.classList.add("open"));
-      els.wardFilter.addEventListener("change", renderPolicies);
-      els.policySearch.addEventListener("input", renderPolicies);
-      document.getElementById("csvBtn").addEventListener("click", exportCsv);
-      document.getElementById("printBtn").addEventListener("click", () => {
-        switchSection("reports");
-        window.print();
-      });
-      document.getElementById("refreshReportBtn").addEventListener("click", renderReportOutput);
-      document.getElementById("copyReportBtn").addEventListener("click", async () => {
-        const text = makeReportText();
-        try {
-          await navigator.clipboard.writeText(text);
-          alert("事後報告文面をコピーしました。");
-        } catch (error) {
-          const selection = window.getSelection();
-          const range = document.createRange();
-          range.selectNodeContents(els.reportOutput);
-          selection.removeAllRanges();
-          selection.addRange(range);
-          alert("コピーが制限されたため、文面を選択しました。Ctrl+Cでコピーできます。");
-        }
-      });
-
-      document.getElementById("reportForm").addEventListener("submit", (event) => {
-        event.preventDefault();
-        const now = new Date().toLocaleString("ja-JP", { month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" });
-        reports.push({
-          time: now,
-          facility: document.getElementById("facility").value,
-          reporter: document.getElementById("reporter").value,
-          eventType: document.getElementById("eventType").value,
-          operation: document.getElementById("operation").value,
-          users: document.getElementById("users").value,
-          staff: document.getElementById("staff").value,
-          damage: document.getElementById("damage").value,
-          urgency: document.getElementById("urgency").value,
-          needs: document.getElementById("needs").value
-        });
-        saveReports();
-        event.target.reset();
-        renderAll();
-        switchSection("reports");
-      });
-
-      renderAll();
+      if (id === "incident") renderIncident();
+      if (id === "logs") renderLogs();
+      if (id === "help") renderHelp();
     }
 
     function renderAll() {
       renderDashboard();
-      renderPolicies();
-      renderResources();
       renderRecentReports();
       renderReportOutput();
+      renderIncident();
+      renderLogs();
+      renderHelp();
+    }
+
+    function init() {
+      els.facility.innerHTML = `<option value="">選択してください</option>` + centerMaster.map(([, name]) => `<option>${escapeHtml(name)}</option>`).join("");
+      document.getElementById("reportDate").value = todayDateValue();
+      document.querySelectorAll(".nav button").forEach((btn) => btn.addEventListener("click", () => switchSection(btn.dataset.section)));
+      document.getElementById("menuBtn").addEventListener("click", () => els.sidebar.classList.add("open"));
+      document.querySelectorAll("[data-filter]").forEach((btn) => btn.addEventListener("click", () => { dashboardFilter = btn.dataset.filter; renderDashboard(); }));
+      document.getElementById("simulateFetchBtn").addEventListener("click", simulateFetchFailure);
+      document.getElementById("csvBtn").addEventListener("click", exportCsv);
+      document.getElementById("incidentBtn").addEventListener("click", () => switchSection("incident"));
+      document.getElementById("printBtn").addEventListener("click", () => { switchSection("reports"); window.print(); });
+      document.getElementById("copyTableBtn").addEventListener("click", copyVisibleTable);
+      document.getElementById("copyReportBtn").addEventListener("click", () => copyText(makeReportText(), "報告文をコピーしました。"));
+      document.getElementById("refreshReportBtn").addEventListener("click", renderReportOutput);
+      document.getElementById("showProgressOnlyBtn").addEventListener("click", () => { reportViewMode = "progress"; renderReportOutput(); });
+      document.getElementById("showNotesOnlyBtn").addEventListener("click", () => { reportViewMode = "notes"; renderReportOutput(); });
+      document.getElementById("showMunicipalityOnlyBtn").addEventListener("click", () => { reportViewMode = "municipality"; renderReportOutput(); });
+      document.getElementById("copyManualTemplateBtn").addEventListener("click", () => copyText(manualTemplate, "手動報告テンプレートをコピーしました。"));
+      document.getElementById("copyLogsBtn").addEventListener("click", () => copyText(JSON.stringify(logs, null, 2), "エラーログJSONをコピーしました。"));
+      document.getElementById("markRecoveredBtn").addEventListener("click", () => { logs = logs.map((log) => ({ ...log, recovered: true })); saveJson(storageKeys.logs, logs); renderLogs(); });
+      document.getElementById("floatingHelpBtn").addEventListener("click", () => switchSection("help"));
+      document.getElementById("runTestsBtn").addEventListener("click", runTests);
+      document.getElementById("closeConfirmBtn").addEventListener("click", closeConfirm);
+      document.getElementById("cancelSaveBtn").addEventListener("click", closeConfirm);
+      document.getElementById("confirmSaveBtn").addEventListener("click", savePendingReport);
+      document.getElementById("clearDraftBtn").addEventListener("click", () => { localStorage.removeItem(storageKeys.draft); document.getElementById("draftNotice").textContent = "一時保存はありません。"; });
+      document.getElementById("needs").addEventListener("input", updateCounter);
+      document.getElementById("reportForm").addEventListener("input", autosaveDraft);
+      document.getElementById("reportForm").addEventListener("submit", (event) => {
+        event.preventDefault();
+        const data = formData();
+        const result = validateReport(data);
+        if (result.errors.length) {
+          showError("E003", { operation: "保存前確認", facility: data.facility, detail: `未入力または不正：${result.errors.join("、")}` });
+          return;
+        }
+        openConfirm(data, result.warnings);
+      });
+      restoreDraft();
+      updateCache();
+      renderAll();
     }
 
     init();
