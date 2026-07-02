@@ -577,6 +577,8 @@
       <nav class="nav" aria-label="画面切替">
         <button class="active" data-section="dashboard"><span class="icon">■</span>ダッシュボード</button>
         <button data-section="workflow"><span class="icon">→</span>対応フロー</button>
+        <button data-section="disasterBook"><span class="icon">≡</span>災害管理台帳</button>
+        <button data-section="nightShift"><span class="icon">●</span>夜間シフト</button>
         <button data-section="submit"><span class="icon">＋</span>現場入力</button>
         <button data-section="reports"><span class="icon">□</span>報告出力</button>
         <button data-section="incident"><span class="icon">!</span>障害時モード</button>
@@ -689,6 +691,67 @@
                 <table>
                   <thead><tr><th>権限</th><th>できること</th><th>制限</th></tr></thead>
                   <tbody id="roleRows"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="disasterBook">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h2>災害管理台帳</h2>
+                <p>Excel「災害管理.xlsx」から、施設別対応者と災害チェック項目を取り込みました。</p>
+              </div>
+              <div class="actions no-print">
+                <button class="btn secondary" id="copyChecklistBtn" type="button">チェック項目をコピー</button>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div class="grid-2">
+                <div>
+                  <h3>エリア・施設別対応者</h3>
+                  <div class="table-wrap">
+                    <table>
+                      <thead><tr><th>エリア</th><th>施設略称</th><th>対応者</th></tr></thead>
+                      <tbody id="disasterFlowRows"></tbody>
+                    </table>
+                  </div>
+                </div>
+                <div>
+                  <h3>チェック項目カテゴリ</h3>
+                  <div class="list" id="checkCategoryList"></div>
+                </div>
+              </div>
+              <h3 style="margin-top: 18px;">災害チェック項目</h3>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>カテゴリ</th><th>確認項目</th><th>ポータル上の扱い</th></tr></thead>
+                  <tbody id="checklistRows"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="nightShift">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h2>夜間対応シフト（想定）</h2>
+                <p>Excel「夜間対応シフト（想定）.xlsx」から、高輪区民センター避難所と高輪いきいきプラザ浸水対策の想定シフトを取り込みました。</p>
+              </div>
+              <div class="actions no-print">
+                <button class="btn secondary" id="copyShiftBtn" type="button">シフト表をコピー</button>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div class="notice">職員名はテンプレート上の空欄として扱い、個人情報をポータルに保持しない設計にしています。</div>
+              <div class="table-wrap" style="margin-top: 14px;">
+                <table>
+                  <thead><tr><th>日付</th><th>拠点</th><th>09:00</th><th>18:00</th><th>22:00以降</th><th>翌08:30</th></tr></thead>
+                  <tbody id="nightShiftRows"></tbody>
                 </table>
               </div>
             </div>
@@ -1030,6 +1093,50 @@
       ["エリア責任者", "担当エリア内の施設確認、未対応施設確認、エリア別CSV出力", "担当外エリアは閲覧不可"],
       ["本部管理者", "全施設確認、全データ出力、自治体報告一覧、エラーログ、マスタ管理", "出力時は確認画面を表示"],
       ["システム管理者", "ユーザー管理、権限管理、エラーログ、システム設定", "業務データ閲覧は必要最小限"]
+    ];
+
+    const disasterFlowPeople = [
+      ["城西・世田谷", "豊玉", "石元"], ["城西・世田谷", "西新宿", "中澤"], ["城西・世田谷", "北新宿", "久保"], ["城西・世田谷", "戸山", "齋藤"], ["城西・世田谷", "ひだまり", "周防"],
+      ["城南", "目黒", "大渡"], ["城南", "白金台", "好村"], ["城南", "高輪", "松岡"], ["城南", "白金", "岩濵"], ["城南", "豊岡", "武田"], ["城南", "神応", "齋藤"], ["城南", "高区C", "鈴木"], ["城南", "北品川", "成瀬"],
+      ["城北・埼玉", "きらりあ", "二村"], ["城北・埼玉", "滝野川東", "西田"], ["城北・埼玉", "滝野川", "志田"], ["城北・埼玉", "名主", "齊藤"], ["城北・埼玉", "荒川", "菅野"], ["城北・埼玉", "ふじみ野", "丁"],
+      ["城東", "城ふ", "小西"], ["城東", "亀ふ", "山口"], ["城東", "亀福祉", "百瀬"], ["城東", "立花", "中村"], ["城東", "墨いき", "高城"],
+      ["神奈川", "霧が丘", "山口"]
+    ];
+
+    const disasterChecklist = [
+      ["建物外部", "飛散のおそれがある物品の屋内収納または固定", "事前確認"],
+      ["建物外部", "看板、掲示物、のぼり旗等の固定状況確認", "事前確認"],
+      ["建物外部", "排水溝、側溝、雨どいの詰まり確認", "事前確認"],
+      ["建物外部", "ベランダ、屋上、外階段等の安全確認", "事前確認"],
+      ["建物外部", "樹木や植栽の倒木リスク確認", "事前確認"],
+      ["建物内部", "雨漏り箇所の確認", "事前確認"],
+      ["建物内部", "懐中電灯の点灯確認", "備品確認"],
+      ["建物内部", "非常用発電機の稼働確認（設置施設）", "備品確認"],
+      ["建物内部", "携帯電話・モバイルバッテリーの充電", "備品確認"],
+      ["建物内部", "非常食・飲料水の在庫確認", "備品確認"],
+      ["利用者・入居者の安全確保", "停電時対応手順の再確認", "運営判断"],
+      ["利用者・入居者の安全確保", "サービス実施可否判断基準の確認", "運営判断"],
+      ["職員の出退勤", "公共交通機関の計画運休情報の確認", "人員体制"],
+      ["職員の出退勤", "出勤困難職員の把握", "人員体制"],
+      ["職員の出退勤", "緊急連絡網の再確認。警報発令前から早めの判断と情報共有を行う", "人員体制"],
+      ["防犯・防火対策", "敷地内外の整理整頓（5S）の徹底", "防犯防火"],
+      ["防犯・防火対策", "可燃物の屋外放置防止", "防犯防火"],
+      ["防犯・防火対策", "施錠管理の徹底", "防犯防火"],
+      ["防犯・防火対策", "防犯カメラの録画状況および撮影方向の確認", "防犯防火"],
+      ["防犯・防火対策", "不審者侵入防止対策の確認", "防犯防火"],
+      ["被害発生時の報告", "発生日時", "自治体・法人報告"],
+      ["被害発生時の報告", "被害状況", "自治体・法人報告"],
+      ["被害発生時の報告", "写真", "自治体・法人報告"],
+      ["被害発生時の報告", "応急措置内容", "自治体・法人報告"]
+    ];
+
+    const nightShiftRows = [
+      ["6月26日（金）", "高輪区民センター 区民避難所", "早番職員 通常出勤", "遅番職員 通常出勤 21:45まで", "21:45から夜間対応者1名、区職員1名常駐、翌8:30まで（台風状況で判断）", "8:30から早番職員通常出勤"],
+      ["6月26日（金）", "高輪いきいきプラザ 浸水対策", "早番職員 通常出勤", "遅番職員 通常出勤 22:00まで", "22:00から夜間対応者1〜2名。できれば2名体制", "8:30から早番職員通常出勤"],
+      ["6月27日（土）", "高輪区民センター 区民避難所", "早番職員 通常出勤", "遅番職員 通常出勤 21:45まで", "21:45から夜間対応者1名、区職員1名常駐、翌8:30まで", "8:30から早番職員通常出勤"],
+      ["6月27日（土）", "高輪いきいきプラザ 浸水対策", "早番職員 通常出勤", "遅番職員 通常出勤 22:00まで", "22:00から夜間対応者1〜2名。3名体制を希望", "8:30から早番職員通常出勤"],
+      ["6月28日（日）", "高輪区民センター 区民避難所", "早番職員 通常出勤", "遅番職員 通常出勤 21:45まで", "21:45から夜間対応者1名、区職員1名常駐、翌8:30まで", "8:30から早番職員通常出勤"],
+      ["6月28日（日）", "高輪いきいきプラザ 浸水対策", "早番職員 通常出勤", "遅番職員 通常出勤 22:00まで", "22:00から夜間対応者1〜2名。できれば2名体制", "8:30から早番職員通常出勤"]
     ];
 
     const securityNotes = [
@@ -1477,6 +1584,48 @@
       `).join("");
     }
 
+    function renderImportedExcelData() {
+      const flowRows = document.getElementById("disasterFlowRows");
+      const checklistRows = document.getElementById("checklistRows");
+      const categoryList = document.getElementById("checkCategoryList");
+      const shiftRows = document.getElementById("nightShiftRows");
+      if (flowRows) {
+        flowRows.innerHTML = disasterFlowPeople.map((row) => `
+          <tr><td>${escapeHtml(row[0])}</td><td>${escapeHtml(row[1])}</td><td>${escapeHtml(row[2])}</td></tr>
+        `).join("");
+      }
+      if (checklistRows) {
+        checklistRows.innerHTML = disasterChecklist.map((row) => `
+          <tr><td>${escapeHtml(row[0])}</td><td>${escapeHtml(row[1])}</td><td><span class="tag info">${escapeHtml(row[2])}</span></td></tr>
+        `).join("");
+      }
+      if (categoryList) {
+        const counts = disasterChecklist.reduce((acc, row) => {
+          acc[row[0]] = (acc[row[0]] || 0) + 1;
+          return acc;
+        }, {});
+        categoryList.innerHTML = Object.entries(counts).map(([category, count]) => `
+          <div class="list-item"><strong>${escapeHtml(category)}</strong><span>${count}項目を施設長の事前確認に反映</span></div>
+        `).join("");
+      }
+      if (shiftRows) {
+        shiftRows.innerHTML = nightShiftRows.map((row) => `
+          <tr>
+            <td>${escapeHtml(row[0])}</td><td>${escapeHtml(row[1])}</td><td>${escapeHtml(row[2])}</td>
+            <td>${escapeHtml(row[3])}</td><td>${escapeHtml(row[4])}</td><td>${escapeHtml(row[5])}</td>
+          </tr>
+        `).join("");
+      }
+    }
+
+    function makeChecklistText() {
+      return disasterChecklist.map((row) => `【${row[0]}】${row[1]}（${row[2]}）`).join("\n");
+    }
+
+    function makeShiftText() {
+      return nightShiftRows.map((row) => `${row[0]}\t${row[1]}\t09:00 ${row[2]}\t18:00 ${row[3]}\t22:00以降 ${row[4]}\t翌08:30 ${row[5]}`).join("\n");
+    }
+
     function exportCsv() {
       try {
         const rows = reportTargets();
@@ -1528,12 +1677,13 @@
       document.querySelectorAll(".section").forEach((section) => section.classList.toggle("active", section.id === id));
       document.querySelectorAll(".nav button").forEach((btn) => btn.classList.toggle("active", btn.dataset.section === id));
       const active = document.querySelector(`.nav button[data-section="${id}"]`);
-      els.pageTitle.textContent = active ? active.textContent.replace(/[■→＋□!◇?✓]/g, "").trim() : "ダッシュボード";
+      els.pageTitle.textContent = active ? active.textContent.replace(/[■→＋□!◇?✓≡●]/g, "").trim() : "ダッシュボード";
       els.sidebar.classList.remove("open");
       if (id === "reports") renderReportOutput();
       if (id === "incident") renderIncident();
       if (id === "logs") renderLogs();
       if (id === "help") renderHelp();
+      if (id === "disasterBook" || id === "nightShift") renderImportedExcelData();
     }
 
     function renderAll() {
@@ -1543,6 +1693,7 @@
       renderIncident();
       renderLogs();
       renderHelp();
+      renderImportedExcelData();
     }
 
     function init() {
@@ -1557,6 +1708,8 @@
       document.getElementById("printBtn").addEventListener("click", () => { switchSection("reports"); window.print(); });
       document.getElementById("copyTableBtn").addEventListener("click", copyVisibleTable);
       document.getElementById("copyReportBtn").addEventListener("click", () => copyText(makeReportText(), "報告文をコピーしました。"));
+      document.getElementById("copyChecklistBtn").addEventListener("click", () => copyText(makeChecklistText(), "災害チェック項目をコピーしました。"));
+      document.getElementById("copyShiftBtn").addEventListener("click", () => copyText(makeShiftText(), "夜間対応シフトをコピーしました。"));
       document.getElementById("refreshReportBtn").addEventListener("click", renderReportOutput);
       document.getElementById("showProgressOnlyBtn").addEventListener("click", () => { reportViewMode = "progress"; renderReportOutput(); });
       document.getElementById("showNotesOnlyBtn").addEventListener("click", () => { reportViewMode = "notes"; renderReportOutput(); });
