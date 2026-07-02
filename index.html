@@ -576,6 +576,7 @@
       </div>
       <nav class="nav" aria-label="画面切替">
         <button class="active" data-section="dashboard"><span class="icon">■</span>ダッシュボード</button>
+        <button data-section="usage"><span class="icon">i</span>使い方</button>
         <button data-section="workflow"><span class="icon">→</span>対応フロー</button>
         <button data-section="disasterBook"><span class="icon">≡</span>災害管理台帳</button>
         <button data-section="nightShift"><span class="icon">●</span>夜間シフト</button>
@@ -593,7 +594,7 @@
         <div>
           <button class="btn secondary mobile-menu" id="menuBtn" type="button">メニュー</button>
           <h1 id="pageTitle">ダッシュボード</h1>
-          <p>災害前後の施設方針、備品、人員、自治体報告を一元管理する販売想定プロトタイプです。</p>
+          <p>災害前後の施設方針、備品、人員、自治体報告を一元管理するための共有ポータルです。</p>
         </div>
         <div class="actions no-print">
           <button class="btn secondary" id="simulateFetchBtn" type="button">取得失敗をテスト</button>
@@ -659,6 +660,68 @@
           </div>
         </section>
 
+        <section class="section" id="usage">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h2>このポータルの使い方</h2>
+                <p>台風・大雨・地震などの災害対応時に、各施設の準備状況と報告情報を同じ形式で確認するための画面です。</p>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div class="grid-3">
+                <div class="list-item">
+                  <strong>1. 本部が状況を確認する</strong>
+                  <span>ダッシュボードで、未入力・対応中・備品不足・自治体報告対象の施設を確認します。</span>
+                </div>
+                <div class="list-item">
+                  <strong>2. 施設長が準備状況を入力する</strong>
+                  <span>「現場入力」から施設名、担当者、対応ステータス、自治体報告ステータス、備品不足、特記事項を入力します。</span>
+                </div>
+                <div class="list-item">
+                  <strong>3. 災害管理台帳を確認する</strong>
+                  <span>「災害管理台帳」で、施設別の対応者と台風前チェック項目を確認します。</span>
+                </div>
+                <div class="list-item">
+                  <strong>4. 夜間対応を確認する</strong>
+                  <span>「夜間シフト」で、夜間帯の避難所・浸水対策の想定配置を確認します。</span>
+                </div>
+                <div class="list-item">
+                  <strong>5. 報告文を作成する</strong>
+                  <span>「報告出力」で、自治体・法人向けの報告文を作成し、必要に応じてコピーまたは印刷します。</span>
+                </div>
+                <div class="list-item">
+                  <strong>6. 障害時は手動運用に切り替える</strong>
+                  <span>システムや通信に問題がある場合は「障害時モード」の手動報告テンプレートを使ってLINE WORKSやメールで報告します。</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h2>入力時の注意</h2>
+                <p>災害時に本部が判断しやすいよう、入力項目は施設単位でそろえます。</p>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>項目</th><th>入力する内容</th><th>注意点</th></tr></thead>
+                  <tbody>
+                    <tr><td>対応ステータス</td><td>完了、対応中、対象外、未入力</td><td>完了率は対象外を除いて計算します。</td></tr>
+                    <tr><td>自治体報告ステータス</td><td>未対応、報告準備中、報告済み、対象外</td><td>未対応・報告準備中は本部確認対象になります。</td></tr>
+                    <tr><td>備品不足</td><td>土嚢、雨合羽、ヘルメット、手袋、バッテリーなど</td><td>不足数や必要時期が分かるように記載します。</td></tr>
+                    <tr><td>人員体制の懸念</td><td>出勤困難、夜間体制、交通機関の停止見込みなど</td><td>施設運営に影響する内容を優先して記載します。</td></tr>
+                    <tr><td>特記事項</td><td>利用者対応、建物被害、自治体連絡、復旧後確認など</td><td>500文字以内で、後から確認できる内容にします。</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <section class="section" id="workflow">
           <div class="panel">
             <div class="panel-head">
@@ -682,8 +745,8 @@
           <div class="panel">
             <div class="panel-head">
               <div>
-                <h2>販売前提の権限設計</h2>
-                <p>初期版は画面上の設計表示です。実運用では認証基盤とサーバー側権限チェックを接続します。</p>
+                <h2>運用時の権限設計</h2>
+                <p>初期版は画面上の設計表示です。実運用では認証基盤とサーバー側の権限チェックを接続します。</p>
               </div>
             </div>
             <div class="panel-body">
@@ -978,7 +1041,7 @@
             <div class="panel-head">
               <div>
                 <h2>テスト項目</h2>
-                <p>販売前に確認すべき基本項目を、この画面で簡易チェックできます。</p>
+                <p>運用前に確認すべき基本項目を、この画面で簡易チェックできます。</p>
               </div>
               <div class="actions no-print">
                 <button class="btn" id="runTestsBtn" type="button">テスト実行</button>
