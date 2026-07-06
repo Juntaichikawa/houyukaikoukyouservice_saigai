@@ -584,6 +584,138 @@
       }
     }
 
+    @media (max-width: 640px) {
+      body {
+        font-size: 15px;
+      }
+
+      .topbar {
+        position: static;
+        padding: 14px 14px 12px;
+        gap: 12px;
+      }
+
+      h1 {
+        font-size: 21px;
+        line-height: 1.3;
+      }
+
+      h2 {
+        font-size: 18px;
+      }
+
+      h3 {
+        font-size: 15px;
+      }
+
+      .actions,
+      .toolbar,
+      .filter-row {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+
+      .btn {
+        width: 100%;
+        min-height: 44px;
+        padding: 10px 12px;
+      }
+
+      .btn.small {
+        min-height: 40px;
+      }
+
+      .content {
+        padding: 12px;
+        gap: 12px;
+      }
+
+      .panel-head,
+      .panel-body {
+        padding: 14px;
+      }
+
+      .metrics {
+        gap: 10px;
+      }
+
+      .metric {
+        padding: 13px;
+      }
+
+      .metric strong {
+        font-size: 26px;
+      }
+
+      .alert-hero {
+        grid-template-columns: 1fr;
+        padding: 13px;
+      }
+
+      .alert-settings {
+        grid-template-columns: 1fr;
+      }
+
+      input,
+      select,
+      textarea {
+        min-height: 44px;
+        font-size: 16px;
+      }
+
+      textarea {
+        min-height: 120px;
+      }
+
+      .table-wrap {
+        margin-left: -2px;
+        margin-right: -2px;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      table {
+        min-width: 680px;
+      }
+
+      th,
+      td {
+        padding: 9px 10px;
+        font-size: 12px;
+      }
+
+      .report-box,
+      .template-box {
+        font-size: 12px;
+        min-height: 180px;
+      }
+
+      .image-preview {
+        grid-template-columns: 72px minmax(0, 1fr);
+      }
+
+      .image-preview img {
+        width: 72px;
+        height: 54px;
+      }
+
+      .help-button {
+        right: 12px;
+        bottom: 12px;
+        width: auto;
+        min-height: 42px;
+      }
+
+      .modal {
+        padding: 10px;
+        align-items: flex-start;
+      }
+
+      .modal-card {
+        max-height: 94vh;
+      }
+    }
+
     @media print {
       .sidebar, .topbar, .no-print, .help-button, .modal {
         display: none !important;
