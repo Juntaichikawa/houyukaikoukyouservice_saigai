@@ -391,6 +391,14 @@
       box-shadow: var(--shadow);
     }
 
+    .alert-settings {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr)) auto;
+      gap: 8px;
+      margin-top: 12px;
+      align-items: end;
+    }
+
     .alert-hero strong {
       display: block;
       margin-bottom: 4px;
@@ -647,8 +655,27 @@
         <div id="successArea" class="no-print"></div>
         <div class="alert-hero no-print" id="weatherAlert">
           <div>
-            <strong>台風・大雨などの接近情報を確認したら、各施設の準備状況を入力してください。</strong>
-            <span class="muted">現在は手動確認用のアラートです。将来は気象庁情報や運用承認済みAPIと連携し、東京接近時に自動表示する設計にできます。</span>
+            <strong id="alertTitleText">台風・大雨などの接近情報を確認したら、各施設の準備状況を入力してください。</strong>
+            <span class="muted" id="alertMetaText">現在は手動確認用のアラートです。将来は気象庁情報や運用承認済みAPIと連携し、東京接近時に自動表示する設計にできます。</span>
+            <div class="alert-settings">
+              <div class="field">
+                <label for="alertTyphoonNo">台風番号</label>
+                <input id="alertTyphoonNo" placeholder="例：台風第1号">
+              </div>
+              <div class="field">
+                <label for="alertIssuedAt">入力依頼日時</label>
+                <input id="alertIssuedAt" type="datetime-local">
+              </div>
+              <div class="field">
+                <label for="alertDeadline">入力期限</label>
+                <input id="alertDeadline" type="datetime-local">
+              </div>
+              <div class="field">
+                <label for="alertSource">確認元</label>
+                <input id="alertSource" placeholder="例：気象庁・港区防災情報">
+              </div>
+              <button class="btn secondary" id="saveAlertBtn" type="button">アラート保存</button>
+            </div>
           </div>
           <button class="btn warn" id="alertInputBtn" type="button">施設入力へ</button>
         </div>
@@ -1140,7 +1167,8 @@
       draft: "publicServiceDisasterDraftV2",
       logs: "publicServiceDisasterErrorLogsV2",
       cache: "publicServiceDisasterCacheV2",
-      history: "publicServiceDisasterHistoryV2"
+      history: "publicServiceDisasterHistoryV2",
+      alert: "publicServiceDisasterAlertV2"
     };
 
     const errorDefs = {
@@ -1271,6 +1299,7 @@
     let history = loadJson(storageKeys.history, []);
     let pendingSave = null;
     let attachedImage = null;
+    let alertState = loadJson(storageKeys.alert, {});
     let dashboardFilter = "all";
     let reportViewMode = "all";
 
@@ -1334,6 +1363,13 @@
       return new Date().toLocaleString("ja-JP", { dateStyle: "medium", timeStyle: "short" });
     }
 
+    function formatDateTimeLocal(value) {
+      if (!value) return "";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return value;
+      return date.toLocaleString("ja-JP", { dateStyle: "medium", timeStyle: "short" });
+    }
+
     function escapeHtml(value) {
       return String(value ?? "").replace(/[&<>"']/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" }[m]));
     }
@@ -1375,6 +1411,37 @@
     function showSuccess(message) {
       els.successArea.innerHTML = `<div class="success-card"><h3>保存完了</h3><div>${escapeHtml(message)}</div></div>`;
       setTimeout(() => { els.successArea.innerHTML = ""; }, 4500);
+    }
+
+    function renderAlertState() {
+      const typhoonNo = alertState.typhoonNo || "台風・大雨";
+      const issued = formatDateTimeLocal(alertState.issuedAt);
+      const deadline = formatDateTimeLocal(alertState.deadline);
+      const source = alertState.source || "手動確認";
+      document.getElementById("alertTitleText").textContent = `${typhoonNo}の接近可能性があります。各施設は準備状況を入力してください。`;
+      document.getElementById("alertMetaText").textContent = [
+        issued ? `入力依頼：${issued}` : "",
+        deadline ? `入力期限：${deadline}` : "",
+        `確認元：${source}`
+      ].filter(Boolean).join(" / ");
+      document.getElementById("alertTyphoonNo").value = alertState.typhoonNo || "";
+      document.getElementById("alertIssuedAt").value = alertState.issuedAt || "";
+      document.getElementById("alertDeadline").value = alertState.deadline || "";
+      document.getElementById("alertSource").value = alertState.source || "";
+    }
+
+    function saveAlertState() {
+      alertState = {
+        typhoonNo: document.getElementById("alertTyphoonNo").value.trim(),
+        issuedAt: document.getElementById("alertIssuedAt").value,
+        deadline: document.getElementById("alertDeadline").value,
+        source: document.getElementById("alertSource").value.trim(),
+        savedAt: nowText()
+      };
+      saveJson(storageKeys.alert, alertState);
+      renderAlertState();
+      showSuccess("台風番号・入力依頼日時・入力期限をアラートに反映しました。");
+      renderReportOutput();
     }
 
     function showError(code, context = {}) {
@@ -1651,6 +1718,10 @@
           "災害対応 事後報告",
           `作成日時：${nowText()}`,
           `表示範囲：${titleMap[mode] || "全施設"}`,
+          `対象災害：${alertState.typhoonNo || "未設定"}`,
+          `入力依頼日時：${formatDateTimeLocal(alertState.issuedAt) || "未設定"}`,
+          `入力期限：${formatDateTimeLocal(alertState.deadline) || "未設定"}`,
+          `確認元：${alertState.source || "未設定"}`,
           "",
           "1. 施設別状況",
           ...rows.map((f) => `・${f.ward} ${f.name} / 対応：${f.status} / 自治体報告：${f.municipalityStatus} / 備品不足：${f.supplyConcern || "なし"} / 人員懸念：${f.staffConcern || "なし"} / 特記事項：${f.notes || "なし"}`),
@@ -1781,11 +1852,15 @@
     function exportContactCsv() {
       try {
         const latest = latestReportByFacility();
-        const header = ["区", "施設名", "連絡状況", "対応ステータス", "自治体報告", "最終連絡日時", "最終更新者", "リマインド対象"];
+        const header = ["対象災害", "入力依頼日時", "入力期限", "確認元", "区", "施設名", "連絡状況", "対応ステータス", "自治体報告", "最終連絡日時", "最終更新者", "リマインド対象"];
         const rows = mergedFacilities().map((facility) => {
           const report = latest.get(facility.name);
           const unconfirmed = !report || facility.status === "未入力";
           return [
+            alertState.typhoonNo || "",
+            formatDateTimeLocal(alertState.issuedAt),
+            formatDateTimeLocal(alertState.deadline),
+            alertState.source || "",
             facility.ward,
             facility.name,
             report ? "連絡あり" : "未確認",
@@ -1815,7 +1890,11 @@
       return [
         "【災害対応準備状況の入力依頼】",
         "",
-        "災害対応ポータルで、台風・大雨等に備えた施設準備状況の入力をお願いします。",
+        `${alertState.typhoonNo || "台風・大雨等"}に備えた施設準備状況の入力をお願いします。`,
+        `入力依頼日時：${formatDateTimeLocal(alertState.issuedAt) || "未設定"}`,
+        `入力期限：${formatDateTimeLocal(alertState.deadline) || "未設定"}`,
+        `確認元：${alertState.source || "未設定"}`,
+        "",
         "未入力または確認が取れていない施設は以下です。",
         "",
         names,
@@ -1906,6 +1985,7 @@
       renderLogs();
       renderHelp();
       renderImportedExcelData();
+      renderAlertState();
     }
 
     function init() {
@@ -1915,6 +1995,7 @@
       document.getElementById("menuBtn").addEventListener("click", () => els.sidebar.classList.add("open"));
       document.querySelectorAll("[data-filter]").forEach((btn) => btn.addEventListener("click", () => { dashboardFilter = btn.dataset.filter; renderDashboard(); }));
       document.getElementById("alertInputBtn").addEventListener("click", () => switchSection("submit"));
+      document.getElementById("saveAlertBtn").addEventListener("click", saveAlertState);
       document.getElementById("simulateFetchBtn").addEventListener("click", simulateFetchFailure);
       document.getElementById("csvBtn").addEventListener("click", exportCsv);
       document.getElementById("incidentBtn").addEventListener("click", () => switchSection("incident"));
